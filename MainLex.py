@@ -3,36 +3,45 @@ import sys
 import json
 
 with open ('Tokens.json', 'r') as Tokens:
-    tokens = json.load(Tokens)
+    dict_tokens = json.load(Tokens)
+tokens = [
+    "PLUS", "MINUS", "TIMES", "DIVIDE",
+    "LPAREN", "RPAREN", "EQUALS", "SEMICOLON", "COLON", "COMMA", "DOT",
+    "LBRACKET", "RBRACKET", "SINGLE_COMMENT"
+] + list(dict_tokens.values())
 
+#Definición de tokens básicos, operadores y símbolos
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_TIMES = r'\*'
+t_DIVIDE = r'/'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_EQUALS = r'='
+t_SEMICOLON = r';'
+t_COLON = r':'
+t_COMMA = r','
+t_DOT = r'\.'
+t_LBRACKET = r'\['
+t_RBRACKET = r'\]'
 
-
-def t_PROGRAM(t):
-	r'program'
-	return t
-
-def t_ARRAY(t):
-	r'array'
-	return t
-
-def t_BEGIN(t):
-	r'begin'
-	return t
-
-def t_CASE(t):
-	r'case'
-	return t
-
-def t_CONST(t):
-	r'array'
-	return t
-
+#Tokens para números, strings, comentarios y identificadores
 def t_NUMBER(t):
-    r'(-)?\d+(\.\d+)'
-    return t
+	r'\d+'
+	t.value = int(t.value)
+	return t
+def t_STRING(t):
+	r'\'([^\\\n]|(\\.))*?\''
+	t.value = t.value[1:-1] 
+	return t
+def t_SINGLE_COMMENT(t):
+	r'{.*?}'
+	pass
 
+#Esta vaina, captura todos los ids y palabras reservadas, y luego las busca en el diccionario para ver si está reservada
 def t_ID(t):
-    r'\w+(\d\w)*' 
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = dict_tokens.get(t.value.lower(), 'ID') 
     return t
 
 def t_newline(t):
