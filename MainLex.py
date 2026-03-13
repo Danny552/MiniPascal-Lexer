@@ -26,6 +26,11 @@ t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
 
 #Tokens para números, strings, comentarios y identificadores
+
+def t_INVALID_ID(t):
+    r'[0-9]+[a-zA-Z_][a-zA-Z_0-9]*'
+    print(f"Lexical Error: Invalid identifier '{t.value}' at line {t.lineno}.") 
+
 def t_NUMBER(t):
 	r'\$[0-9a-fA-F]+|\d+(\.\d+)?((E|e)(-)?\d+(\.\d+)?)?'
 	return t
