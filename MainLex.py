@@ -53,8 +53,7 @@ def t_error(t):
     print ("Lexical error: " + str(t.value[0]))
     t.lexer.skip(1)
 	
-def test(data, lexer):
-	lexer.input(data)
+def test(lexer):
 	while True:
 		tok = lexer.token()
 		if not tok:
@@ -72,4 +71,4 @@ if __name__ == '__main__':
 	data = f.read()
 	print (data)
 	lexer.input(data)
-	test(data, lexer)
+	test(lexer)
