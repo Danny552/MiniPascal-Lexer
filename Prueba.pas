@@ -6,6 +6,7 @@ uses Crt, DOS;  { declaraciones }
 CONST
     Pi = 3.1416;
     IVA = 12;
+    HEX = $FF;
 type
     Palabra = string[20];
     Notas = 1..10;
