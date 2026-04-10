@@ -89,11 +89,16 @@ def p_if_stmt(p):
                | IF LPAREN expression RPAREN THEN statement ELSE statement'''
     pass
 
+def p_for_stmt(p):
+    'for_stmt : FOR ID ASSIGN expression TO expression DO statement'
+    pass
+
 def p_statement(p):
     '''statement : call_stmt SEMICOLON
                  | assignment_stmt SEMICOLON
                  | compound_stmt
                  | if_stmt
+                 | for_stmt
                  | empty'''
     pass
 
@@ -126,8 +131,6 @@ def p_expression(p):
     '''expression : term
                   | expression PLUS term
                   | expression MINUS term
-                  | expression TIMES term
-                  | expression DIVIDE term
                   | expression GREATER term
                   | expression LESS term
                   | expression GREATEREQUAL term
@@ -136,11 +139,20 @@ def p_expression(p):
                   | expression_formatted'''
     pass
 
-def p_term(p):
-    '''term : ID
-            | NUMBER
-            | STRING'''
+def p_factor(p):
+    '''factor : NUMBER
+              | STRING
+              | call_stmt
+              | LPAREN expression RPAREN'''
+
     pass
+
+def p_term(p):
+    '''term : factor
+            | term TIMES factor
+            | term DIVIDE factor'''
+    pass
+
 
 def p_empty(p):
     'empty :'
