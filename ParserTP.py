@@ -3,6 +3,8 @@ from MainLex import tokens
 import MainLex
 import sys
 
+#Ayudado por Gemini
+
 # Zona de cabezal
 def p_program(p):
     'program : PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt DOT'
