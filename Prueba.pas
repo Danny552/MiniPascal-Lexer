@@ -5,7 +5,7 @@ program DemoPrimero; { cabecera }
 uses Crt, DOS;  { declaraciones }
 CONST
     Pi = 3.1416;
-    223956239762462497IVA = 12;
+    IVA = 12;
     HEX = $FF;
     COMPLEX = 4.1E-1.3; 
 type
