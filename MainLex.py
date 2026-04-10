@@ -7,7 +7,7 @@ with open ('Tokens.json', 'r') as Tokens:
 tokens = [
     "PLUS", "MINUS", "TIMES", "DIVIDE",
     "LPAREN", "RPAREN", "EQUALS", "SEMICOLON", "COLON", "COMMA", "DOT",
-    "LBRACKET", "RBRACKET", "SINGLE_COMMENT"
+    "LBRACKET", "RBRACKET", "SINGLE_COMMENT", "ASSIGN"
 ] + list(dict_tokens.values())
 
 #Definición de tokens básicos, operadores y símbolos
@@ -18,6 +18,7 @@ t_DIVIDE = r'/'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_EQUALS = r'='
+t_ASSIGN = r':='
 t_SEMICOLON = r';'
 t_COLON = r':'
 t_COMMA = r','

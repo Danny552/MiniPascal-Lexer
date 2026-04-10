@@ -6,6 +6,7 @@ Unused terminals:
     AND
     ARRAY
     ASM
+    ASSIGN
     BREAK
     CASE
     CONSTRUCTOR
@@ -58,73 +59,11 @@ Rule 1     program -> PROGRAM ID SEMICOLON uses_clause declaration_sections comp
 Rule 2     uses_clause -> USES id_list SEMICOLON
 Rule 3     uses_clause -> empty
 Rule 4     id_list -> ID
-
+Rule 5     id_list -> id_list COMMA ID
+Rule 6     declaration_sections -> declaration_sections section
+Rule 7     declaration_sections -> empty
 Rule 8     section -> const_section
 Rule 9     section -> type_section
-Rule 10    section -> var_section
-Rule 11    section -> procedure_declaration
-Rule 12    section -> function_declaration
-Rule 13    const_section -> CONST const_list
-Rule 14    const_list -> const_list ID EQUALS expression SEMICOLON
-Rule 15    const_list -> ID EQUALS expression SEMICOLON
-Rule 16    type_section -> TYPE type_list
-Rule 17    type_section -> empty
-Rule 18    type_list -> type_list ID EQUALS type_specifier SEMICOLON
-Rule 19    type_list -> ID EQUALS type_specifier SEMICOLON
-Rule 20    var_section -> VAR var_list
-Rule 21    var_list -> var_list id_list COLON type_specifier SEMICOLON
-Rule 22    var_list -> id_list COLON type_specifier SEMICOLON
-Rule 23    type_specifier -> ID
-Rule 24    type_specifier -> STRING LBRACKET NUMBER RBRACKET
-Rule 25    type_specifier -> NUMBER DOT DOT NUMBER
-Rule 26    procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON
-Rule 27    function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
-Rule 28    compound_stmt -> BEGIN statement_list END
-Rule 29    statement_list -> statement_list statement
-Rule 30    statement_list -> statement
-Rule 31    statement -> call_stmt SEMICOLON
-Rule 32    statement -> assignment_stmt SEMICOLON
-Rule 33    statement -> compound_stmt
-Rule 34    statement -> empty
-Rule 35    call_stmt -> ID LPAREN args RPAREN
-Rule 36    call_stmt -> ID
-Rule 37    args -> expression_list
-Rule 38    args -> empty
-Rule 39    expression_list -> expression_list 
-Rule 8     section -> const_section
-Rule 9     section -> type_section
-Rule 8     section -> const_section
-Rule 9     section -> type_section
-Rule 10    section -> var_section
-Rule 11    section -> procedure_declaration
-Rule 12    section -> function_declaration
-Rule 13    const_section -> CONST const_list
-Rule 14    const_list -> const_list ID EQUALS expression SEMICOLON
-Rule 15    const_list -> ID EQUALS expression SEMICOLON
-Rule 16    type_section -> TYPE type_list
-Rule 17    type_section -> empty
-Rule 18    type_list -> type_list ID EQUALS type_specifier SEMICOLON
-Rule 19    type_list -> ID EQUALS type_specifier SEMICOLON
-Rule 20    var_section -> VAR var_list
-Rule 21    var_list -> var_list id_list COLON type_specifier SEMICOLON
-Rule 22    var_list -> id_list COLON type_specifier SEMICOLON
-Rule 23    type_specifier -> ID
-Rule 24    type_specifier -> STRING LBRACKET NUMBER RBRACKET
-Rule 25    type_specifier -> NUMBER DOT DOT NUMBER
-Rule 26    procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON
-Rule 27    function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
-Rule 28    compound_stmt -> BEGIN statement_list END
-Rule 29    statement_list -> statement_list statement
-Rule 30    statement_list -> statement
-Rule 31    statement -> call_stmt SEMICOLON
-Rule 32    statement -> assignment_stmt SEMICOLON
-Rule 33    statement -> compound_stmt
-Rule 34    statement -> empty
-Rule 35    call_stmt -> ID LPAREN args RPAREN
-Rule 36    call_stmt -> ID
-Rule 37    args -> expression_list
-Rule 38    args -> empty
-Rule 39    expression_list -> expression_list
 Rule 10    section -> var_section
 Rule 11    section -> procedure_declaration
 Rule 12    section -> function_declaration
@@ -173,6 +112,7 @@ ABSOLUTE             :
 AND                  : 
 ARRAY                : 
 ASM                  : 
+ASSIGN               : 
 BEGIN                : 28
 BREAK                : 
 CASE                 : 
