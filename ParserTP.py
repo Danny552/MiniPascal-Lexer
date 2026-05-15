@@ -2,30 +2,31 @@ import ply.yacc as yacc
 from MainLex import tokens
 import sys
 
-# --- SEMANTIC UTILITIES ---
-scopes = [{}]  # Global scope is at index 0
+# --- NUEVO: Contador de errores ---
+error_stats = {
+    'sintactico': 0,
+    'semantico': 0
+}
+
+scopes = [{}] 
 
 def enter_scope():
     scopes.append({})
-    print("DEBUG: Entered new scope.")
+    print("DEBUG: Se entra a un nuevo scope")
 
-def exit_scope():
-    if len(scopes) > 1:
-        popped = scopes.pop()
-        print(f"DEBUG: Exited scope. Symbols lost: {list(popped.keys())}")
 
 def declare_symbol(name, symbol_type, value=None):
-    """Declare a symbol storing name, type and optional attribute (value)."""
     current_scope = scopes[-1]
     if name in current_scope:
-        print(f"SEMANTIC ERROR: '{name}' already declared in this scope.")
+        print(f"Error semantico: '{name}' Ya esta declarado en el scope.")
+        error_stats['semantico'] += 1 # Incremento
     else:
         current_scope[name] = {
             'nombre': name,
             'tipo': symbol_type,
             'atributo': value
         }
-        print(f"DEBUG: Declared '{name}' as {symbol_type}")
+        print(f"DEBUG: Se declara '{name}' como {symbol_type}")
 
 def lookup_symbol(name):
     for scope in reversed(scopes):
@@ -47,23 +48,18 @@ def update_symbol_value(name, value):
             break
 
 def evaluate_expression(expr):
-    """Evaluate a parsed expression structure and return numeric value if possible."""
-    # Numbers as Python ints/floats
     if isinstance(expr, (int, float)):
         return expr
 
-    # If expr is a string (identifier), return its atributo if available
     if isinstance(expr, str):
         sym = get_symbol_info(expr)
         if sym and sym.get('atributo') is not None:
             return sym['atributo']
         try:
-            # Try convert numeric-like strings
             return float(expr)
         except Exception:
             return None
 
-    # Tuple operator nodes: (left, op, right)
     if isinstance(expr, tuple) and len(expr) == 3:
         left, op, right = expr
         lval = evaluate_expression(left)
@@ -71,17 +67,12 @@ def evaluate_expression(expr):
         if lval is None or rval is None:
             return None
         try:
-            if op == '+':
-                return lval + rval
-            if op == '-':
-                return lval - rval
-            if op == '*':
-                return lval * rval
-            if op == '/':
-                return lval / rval if rval != 0 else None
+            if op == '+': return lval + rval
+            if op == '-': return lval - rval
+            if op == '*': return lval * rval
+            if op == '/': return lval / rval if rval != 0 else None
         except Exception:
             return None
-
     return None
 
 def print_symbol_table():
@@ -97,15 +88,17 @@ def print_symbol_table():
                 print(f"{info['nombre']:<20} {info['tipo']:<15} {str(attr):<15}")
     print("="*60)
 
+def print_error_report():
+    print("RESUMEN DE ERRORES")
+    print(f"Errores Sintácticos: {error_stats['sintactico']}")
+    print(f"Errores Semánticos:  {error_stats['semantico']}")
+    print(f"Total de Errores:    {sum(error_stats.values())}")
 
-# --- GRAMMAR RULES ---
-
-# The first rule is automatically the start symbol, 
-# but we define it explicitly in yacc.yacc() at the bottom to be safe.
 def p_program(p):
     'program : PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt DOT'
-    print("\n--- SEMANTIC ANALYSIS COMPLETE ---")
+    print("\n--- ANÁLISIS SEMANTICO COMPLETO ---")
     print_symbol_table()
+    print_error_report()
 
 def p_uses_clause(p):
     '''uses_clause : USES id_list SEMICOLON
@@ -134,7 +127,6 @@ def p_section(p):
     pass
 
 
-# Sections (Removed '| empty' from here to prevent infinite recursion)
 def p_const_section(p):
     'const_section : CONST const_list'
     pass
@@ -145,7 +137,7 @@ def p_const_list(p):
     pass
 
 def p_type_section(p):
-    'type_section : TYPE type_list' # Fixed infinite loop here
+    'type_section : TYPE type_list'
     pass
 
 def p_type_list(p):
@@ -173,20 +165,15 @@ def p_type_specifier(p):
                       | NUMBER DOT DOT NUMBER'''
     p[0] = p[1]
 
-# Procedures and Functions
 def p_procedure_declaration(p):
     'procedure_declaration : PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON'
-    # register procedure in global scope
     declare_symbol(p[2], 'procedure')
-    exit_scope() # Exit the scope we created during args
+
 
 def p_function_declaration(p):
     'function_declaration : FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON'
-    # register function in global scope (attribute can hold return later)
     declare_symbol(p[2], f"function returning {p[7]}")
-    exit_scope() # Exit the scope we created during args
 
-# Statements
 def p_compound_stmt(p):
     'compound_stmt : BEGIN statement_list END'
     pass
@@ -194,7 +181,7 @@ def p_compound_stmt(p):
 def p_statement_list(p):
     '''statement_list : statement_list statement
                       | statement
-                      | empty''' # Moved empty here to fix infinite loop
+                      | empty''' 
     pass
 
 def p_statement(p):
@@ -213,17 +200,19 @@ def p_if_stmt(p):
 def p_for_stmt(p):
     'for_stmt : FOR ID ASSIGN expression TO expression DO statement'
     if lookup_symbol(p[2]) is None:
-        print(f"SEMANTIC ERROR: Loop variable '{p[2]}' not declared.")
+        print(f"Error semántico: Variable '{p[2]}' no declarada.")
+        error_stats['semantico'] += 1 # Incremento
 
 def p_assignment_stmt(p):
     'assignment_stmt : ID ASSIGN expression'
     if lookup_symbol(p[1]) is None:
-        print(f"SEMANTIC ERROR: Variable '{p[1]}' used before declaration.")
+        print(f"Error semántico: Variable '{p[1]}' usada antes de su declaración.")
+        error_stats['semantico'] += 1 # Incremento
     else:
         val = evaluate_expression(p[3])
         if val is not None:
             update_symbol_value(p[1], val)
-            print(f"DEBUG: Assigned {val} to {p[1]}")
+            print(f"DEBUG: Asignado {val} a {p[1]}")
 
 def p_call_stmt(p):
     '''call_stmt : ID LPAREN expression_list RPAREN
@@ -231,10 +220,10 @@ def p_call_stmt(p):
     name = p[1]
     if lookup_symbol(name) is None:
         if name.lower() not in ['write', 'writeln', 'readln']:
-            print(f"SEMANTIC ERROR: Function or procedure '{name}' not defined.")
+            print(f"Error semántico: Función o procedimiento '{name}' no definido.")
+            error_stats['semantico'] += 1 # Incremento
     p[0] = name
-
-# Arguments and Expressions
+    
 def p_args(p):
     '''args : arg_list
             | empty'''
@@ -243,7 +232,6 @@ def p_args(p):
 def p_arg_list(p):
     '''arg_list : ID COLON type_specifier
                 | arg_list SEMICOLON ID COLON type_specifier'''
-    # We force a scope entry here only if one doesn't exist yet for the function
     if len(scopes) == 1: 
         enter_scope() 
         
@@ -286,32 +274,23 @@ def p_factor(p):
               | call_stmt
               | LPAREN expression RPAREN'''
     if len(p) == 2:
-        # Try to convert NUMBER token strings to numeric types
-        try:
-            if isinstance(p[1], str) and p.slice[1].type == 'NUMBER':
-                if '.' in p[1] or 'e' in p[1].lower():
-                    p[0] = float(p[1])
-                else:
-                    p[0] = int(p[1])
+            if isinstance(p[1], str) and p[1].replace('.','',1).isdigit():
+                p[0] = float(p[1]) if '.' in p[1] else int(p[1])
             else:
                 p[0] = p[1]
-        except Exception:
-            p[0] = p[1]
-    else:
-        p[0] = p[2]
+    else: p[0] = p[2]
 
 def p_empty(p):
     'empty :'
     pass
 
 def p_error(p):
+    error_stats['sintactico'] += 1 # Incremento
     if p:
-        print(f"SYNTAX ERROR AT LINE {p.lineno}: Unexpected token '{p.value}'")
+        print(f"Error de sintaxis en la línea {p.lineno}: Token inesperado '{p.value}'")
     else:
-        print("Error: Unexpected end of file")
+        print("Error: Fin de archivo inesperado")
 
-# --- MAIN BLOCK ---
-# We explicitly define the start symbol so Yacc never gets confused again
 parser = yacc.yacc(start='program')
 
 if __name__ == '__main__':
@@ -321,4 +300,4 @@ if __name__ == '__main__':
     try:
         parser.parse(data, tracking=True)
     except Exception as e:
-        print(f"Execution Error: {e}")
+        print(f"Error de ejecución: {e}")
