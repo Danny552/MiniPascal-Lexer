@@ -3,6 +3,7 @@ program TestGood;
 var
     base, height, area: integer;
 
+
 begin
     base := 10;
     height := 20;

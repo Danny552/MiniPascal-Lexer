@@ -2,7 +2,7 @@ import ply.yacc as yacc
 from MainLex import tokens
 import sys
 
-# --- NUEVO: Contador de errores ---
+# Colaborado con Gemini
 error_stats = {
     'sintactico': 0,
     'semantico': 0
