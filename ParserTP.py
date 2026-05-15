@@ -14,12 +14,17 @@ def exit_scope():
         popped = scopes.pop()
         print(f"DEBUG: Exited scope. Symbols lost: {list(popped.keys())}")
 
-def declare_symbol(name, symbol_type):
+def declare_symbol(name, symbol_type, value=None):
+    """Declare a symbol storing name, type and optional attribute (value)."""
     current_scope = scopes[-1]
     if name in current_scope:
         print(f"SEMANTIC ERROR: '{name}' already declared in this scope.")
     else:
-        current_scope[name] = symbol_type
+        current_scope[name] = {
+            'nombre': name,
+            'tipo': symbol_type,
+            'atributo': value
+        }
         print(f"DEBUG: Declared '{name}' as {symbol_type}")
 
 def lookup_symbol(name):
@@ -27,6 +32,70 @@ def lookup_symbol(name):
         if name in scope:
             return scope[name]
     return None
+
+def get_symbol_info(name):
+    for scope in reversed(scopes):
+        if name in scope:
+            return scope[name]
+    return None
+
+def update_symbol_value(name, value):
+    for scope in reversed(scopes):
+        if name in scope:
+            if isinstance(scope[name], dict):
+                scope[name]['atributo'] = value
+            break
+
+def evaluate_expression(expr):
+    """Evaluate a parsed expression structure and return numeric value if possible."""
+    # Numbers as Python ints/floats
+    if isinstance(expr, (int, float)):
+        return expr
+
+    # If expr is a string (identifier), return its atributo if available
+    if isinstance(expr, str):
+        sym = get_symbol_info(expr)
+        if sym and sym.get('atributo') is not None:
+            return sym['atributo']
+        try:
+            # Try convert numeric-like strings
+            return float(expr)
+        except Exception:
+            return None
+
+    # Tuple operator nodes: (left, op, right)
+    if isinstance(expr, tuple) and len(expr) == 3:
+        left, op, right = expr
+        lval = evaluate_expression(left)
+        rval = evaluate_expression(right)
+        if lval is None or rval is None:
+            return None
+        try:
+            if op == '+':
+                return lval + rval
+            if op == '-':
+                return lval - rval
+            if op == '*':
+                return lval * rval
+            if op == '/':
+                return lval / rval if rval != 0 else None
+        except Exception:
+            return None
+
+    return None
+
+def print_symbol_table():
+    print("\n" + "="*60)
+    print("TABLA DE SÍMBOLOS")
+    print("="*60)
+    print(f"{'NOMBRE':<20} {'TIPO':<15} {'ATRIBUTO':<15}")
+    print("-"*60)
+    for scope in scopes:
+        for name, info in scope.items():
+            if isinstance(info, dict):
+                attr = info['atributo'] if info['atributo'] is not None else '---'
+                print(f"{info['nombre']:<20} {info['tipo']:<15} {str(attr):<15}")
+    print("="*60)
 
 
 # --- GRAMMAR RULES ---
@@ -36,7 +105,7 @@ def lookup_symbol(name):
 def p_program(p):
     'program : PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt DOT'
     print("\n--- SEMANTIC ANALYSIS COMPLETE ---")
-    print("Global Symbols:", scopes[0])
+    print_symbol_table()
 
 def p_uses_clause(p):
     '''uses_clause : USES id_list SEMICOLON
@@ -107,12 +176,14 @@ def p_type_specifier(p):
 # Procedures and Functions
 def p_procedure_declaration(p):
     'procedure_declaration : PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON'
-    scopes[0][p[2]] = "procedure"
+    # register procedure in global scope
+    declare_symbol(p[2], 'procedure')
     exit_scope() # Exit the scope we created during args
 
 def p_function_declaration(p):
     'function_declaration : FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON'
-    scopes[0][p[2]] = f"function returning {p[7]}"
+    # register function in global scope (attribute can hold return later)
+    declare_symbol(p[2], f"function returning {p[7]}")
     exit_scope() # Exit the scope we created during args
 
 # Statements
@@ -148,6 +219,11 @@ def p_assignment_stmt(p):
     'assignment_stmt : ID ASSIGN expression'
     if lookup_symbol(p[1]) is None:
         print(f"SEMANTIC ERROR: Variable '{p[1]}' used before declaration.")
+    else:
+        val = evaluate_expression(p[3])
+        if val is not None:
+            update_symbol_value(p[1], val)
+            print(f"DEBUG: Assigned {val} to {p[1]}")
 
 def p_call_stmt(p):
     '''call_stmt : ID LPAREN expression_list RPAREN
@@ -190,20 +266,39 @@ def p_expression(p):
                   | expression GREATEREQUAL term
                   | expression LESSEQUAL term
                   | expression NOTEQUAL term'''
-    p[0] = p[1]
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2], p[3])
 
 def p_term(p):
     '''term : factor
             | term TIMES factor
             | term DIVIDE factor'''
-    p[0] = p[1]
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2], p[3])
 
 def p_factor(p):
     '''factor : NUMBER
               | STRING
               | call_stmt
               | LPAREN expression RPAREN'''
-    p[0] = p[1]
+    if len(p) == 2:
+        # Try to convert NUMBER token strings to numeric types
+        try:
+            if isinstance(p[1], str) and p.slice[1].type == 'NUMBER':
+                if '.' in p[1] or 'e' in p[1].lower():
+                    p[0] = float(p[1])
+                else:
+                    p[0] = int(p[1])
+            else:
+                p[0] = p[1]
+        except Exception:
+            p[0] = p[1]
+    else:
+        p[0] = p[2]
 
 def p_empty(p):
     'empty :'
