@@ -77,7 +77,7 @@ if __name__ == '__main__':
 	if (len(sys.argv) > 1):
 		fin = sys.argv[1]
 	else:
-		fin = 'Pruebabuen.pas'
+		fin = 'Prueba.pas'
 	f = open(fin, 'r')
 	data = f.read()
 	print (data)

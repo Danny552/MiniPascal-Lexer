@@ -1,1 +1,2654 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ABSOLUTE
+    AND
+    ASM
+    BREAK
+    CASE
+    CONSTRUCTOR
+    CONTINUE
+    DESTRUCTOR
+    DIV
+    DOWNTO
+    EXTERNAL
+    FILE
+    FORWARD
+    GOTO
+    IMPLEMENTATION
+    IN
+    INHERITED
+    INLINE
+    INTERFACE
+    INTERRUPT
+    LABEL
+    MOD
+    NIL
+    NOT
+    ON
+    OPERATOR
+    OR
+    PACKED
+    RECORD
+    REPEAT
+    SELF
+    SET
+    SHL
+    SHR
+    SINGLE_COMMENT
+    UNIT
+    UNTIL
+    WHILE
+    WITH
+    XOR
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt DOT
+Rule 2     uses_clause -> USES id_list SEMICOLON
+Rule 3     uses_clause -> empty
+Rule 4     id_list -> ID
+Rule 5     id_list -> id_list COMMA ID
+Rule 6     declaration_sections -> declaration_sections section
+Rule 7     declaration_sections -> empty
+Rule 8     section -> const_section
+Rule 9     section -> type_section
+Rule 10    section -> var_section
+Rule 11    section -> procedure_declaration
+Rule 12    section -> function_declaration
+Rule 13    const_section -> CONST const_list
+Rule 14    const_list -> const_list ID EQUALS expression SEMICOLON
+Rule 15    const_list -> ID EQUALS expression SEMICOLON
+Rule 16    type_section -> TYPE type_list
+Rule 17    type_list -> type_list ID EQUALS type_specifier SEMICOLON
+Rule 18    type_list -> ID EQUALS type_specifier SEMICOLON
+Rule 19    var_section -> VAR var_list
+Rule 20    var_list -> var_list id_list COLON type_specifier SEMICOLON
+Rule 21    var_list -> id_list COLON type_specifier SEMICOLON
+Rule 22    type_specifier -> ID
+Rule 23    type_specifier -> type_base
+Rule 24    type_specifier -> ARRAY LBRACKET range RBRACKET OF type_base
+Rule 25    type_specifier -> STRING LBRACKET NUMBER RBRACKET
+Rule 26    type_base -> INTEGER
+Rule 27    type_base -> REAL
+Rule 28    type_base -> CHAR
+Rule 29    type_base -> BOOLEAN
+Rule 30    range -> NUMBER DOT DOT NUMBER
+Rule 31    procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON
+Rule 32    function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
+Rule 33    compound_stmt -> BEGIN statement_list END
+Rule 34    statement_list -> statement_list statement
+Rule 35    statement_list -> statement
+Rule 36    statement_list -> empty
+Rule 37    statement -> call_stmt SEMICOLON
+Rule 38    statement -> assignment_stmt SEMICOLON
+Rule 39    statement -> compound_stmt
+Rule 40    statement -> if_stmt
+Rule 41    statement -> for_stmt
+Rule 42    if_stmt -> IF LPAREN expression RPAREN THEN statement
+Rule 43    if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement
+Rule 44    for_stmt -> FOR ID ASSIGN expression TO expression DO statement
+Rule 45    assignment_stmt -> ID ASSIGN expression
+Rule 46    call_stmt -> ID LPAREN expression_list RPAREN
+Rule 47    call_stmt -> ID
+Rule 48    args -> arg_list
+Rule 49    args -> empty
+Rule 50    arg_list -> ID COLON type_specifier
+Rule 51    arg_list -> arg_list SEMICOLON ID COLON type_specifier
+Rule 52    expression_list -> expression_list COMMA expression
+Rule 53    expression_list -> expression
+Rule 54    expression -> term
+Rule 55    expression -> expression PLUS term
+Rule 56    expression -> expression MINUS term
+Rule 57    expression -> expression GREATER term
+Rule 58    expression -> expression LESS term
+Rule 59    expression -> expression GREATEREQUAL term
+Rule 60    expression -> expression LESSEQUAL term
+Rule 61    expression -> expression NOTEQUAL term
+Rule 62    term -> factor
+Rule 63    term -> term TIMES factor
+Rule 64    term -> term DIVIDE factor
+Rule 65    factor -> NUMBER
+Rule 66    factor -> STRING
+Rule 67    factor -> call_stmt
+Rule 68    factor -> LPAREN expression RPAREN
+Rule 69    empty -> <empty>
+
+Terminals, with rules where they appear
+
+ABSOLUTE             : 
+AND                  : 
+ARRAY                : 24
+ASM                  : 
+ASSIGN               : 44 45
+BEGIN                : 33
+BOOLEAN              : 29
+BREAK                : 
+CASE                 : 
+CHAR                 : 28
+COLON                : 20 21 32 50 51
+COMMA                : 5 52
+CONST                : 13
+CONSTRUCTOR          : 
+CONTINUE             : 
+DESTRUCTOR           : 
+DIV                  : 
+DIVIDE               : 64
+DO                   : 44
+DOT                  : 1 30 30
+DOWNTO               : 
+ELSE                 : 43
+END                  : 33
+EQUALS               : 14 15 17 18
+EXTERNAL             : 
+FILE                 : 
+FOR                  : 44
+FORWARD              : 
+FUNCTION             : 32
+GOTO                 : 
+GREATER              : 57
+GREATEREQUAL         : 59
+ID                   : 1 4 5 14 15 17 18 22 31 32 44 45 46 47 50 51
+IF                   : 42 43
+IMPLEMENTATION       : 
+IN                   : 
+INHERITED            : 
+INLINE               : 
+INTEGER              : 26
+INTERFACE            : 
+INTERRUPT            : 
+LABEL                : 
+LBRACKET             : 24 25
+LESS                 : 58
+LESSEQUAL            : 60
+LPAREN               : 31 32 42 43 46 68
+MINUS                : 56
+MOD                  : 
+NIL                  : 
+NOT                  : 
+NOTEQUAL             : 61
+NUMBER               : 25 30 30 65
+OF                   : 24
+ON                   : 
+OPERATOR             : 
+OR                   : 
+PACKED               : 
+PLUS                 : 55
+PROCEDURE            : 31
+PROGRAM              : 1
+RBRACKET             : 24 25
+REAL                 : 27
+RECORD               : 
+REPEAT               : 
+RPAREN               : 31 32 42 43 46 68
+SELF                 : 
+SEMICOLON            : 1 2 14 15 17 18 20 21 31 31 32 32 37 38 51
+SET                  : 
+SHL                  : 
+SHR                  : 
+SINGLE_COMMENT       : 
+STRING               : 25 66
+THEN                 : 42 43
+TIMES                : 63
+TO                   : 44
+TYPE                 : 16
+UNIT                 : 
+UNTIL                : 
+USES                 : 2
+VAR                  : 19
+WHILE                : 
+WITH                 : 
+XOR                  : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+arg_list             : 48 51
+args                 : 31 32
+assignment_stmt      : 38
+call_stmt            : 37 67
+compound_stmt        : 1 31 32 39
+const_list           : 13 14
+const_section        : 8
+declaration_sections : 1 6
+empty                : 3 7 36 49
+expression           : 14 15 42 43 44 44 45 52 53 55 56 57 58 59 60 61 68
+expression_list      : 46 52
+factor               : 62 63 64
+for_stmt             : 41
+function_declaration : 12
+id_list              : 2 5 20 21
+if_stmt              : 40
+procedure_declaration : 11
+program              : 0
+range                : 24
+section              : 6
+statement            : 34 35 42 43 43 44
+statement_list       : 33 34
+term                 : 54 55 56 57 58 59 60 61 63 64
+type_base            : 23 24
+type_list            : 16 17
+type_section         : 9
+type_specifier       : 17 18 20 21 32 50 51
+uses_clause          : 1
+var_list             : 19 20
+var_section          : 10
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt DOT
+
+    PROGRAM         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAM . ID SEMICOLON uses_clause declaration_sections compound_stmt DOT
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAM ID . SEMICOLON uses_clause declaration_sections compound_stmt DOT
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) program -> PROGRAM ID SEMICOLON . uses_clause declaration_sections compound_stmt DOT
+    (2) uses_clause -> . USES id_list SEMICOLON
+    (3) uses_clause -> . empty
+    (69) empty -> .
+
+    USES            shift and go to state 6
+    BEGIN           reduce using rule 69 (empty -> .)
+    CONST           reduce using rule 69 (empty -> .)
+    TYPE            reduce using rule 69 (empty -> .)
+    VAR             reduce using rule 69 (empty -> .)
+    PROCEDURE       reduce using rule 69 (empty -> .)
+    FUNCTION        reduce using rule 69 (empty -> .)
+
+    uses_clause                    shift and go to state 5
+    empty                          shift and go to state 7
+
+state 5
+
+    (1) program -> PROGRAM ID SEMICOLON uses_clause . declaration_sections compound_stmt DOT
+    (6) declaration_sections -> . declaration_sections section
+    (7) declaration_sections -> . empty
+    (69) empty -> .
+
+    BEGIN           reduce using rule 69 (empty -> .)
+    CONST           reduce using rule 69 (empty -> .)
+    TYPE            reduce using rule 69 (empty -> .)
+    VAR             reduce using rule 69 (empty -> .)
+    PROCEDURE       reduce using rule 69 (empty -> .)
+    FUNCTION        reduce using rule 69 (empty -> .)
+
+    declaration_sections           shift and go to state 8
+    empty                          shift and go to state 9
+
+state 6
+
+    (2) uses_clause -> USES . id_list SEMICOLON
+    (4) id_list -> . ID
+    (5) id_list -> . id_list COMMA ID
+
+    ID              shift and go to state 11
+
+    id_list                        shift and go to state 10
+
+state 7
+
+    (3) uses_clause -> empty .
+
+    BEGIN           reduce using rule 3 (uses_clause -> empty .)
+    CONST           reduce using rule 3 (uses_clause -> empty .)
+    TYPE            reduce using rule 3 (uses_clause -> empty .)
+    VAR             reduce using rule 3 (uses_clause -> empty .)
+    PROCEDURE       reduce using rule 3 (uses_clause -> empty .)
+    FUNCTION        reduce using rule 3 (uses_clause -> empty .)
+
+
+state 8
+
+    (1) program -> PROGRAM ID SEMICOLON uses_clause declaration_sections . compound_stmt DOT
+    (6) declaration_sections -> declaration_sections . section
+    (33) compound_stmt -> . BEGIN statement_list END
+    (8) section -> . const_section
+    (9) section -> . type_section
+    (10) section -> . var_section
+    (11) section -> . procedure_declaration
+    (12) section -> . function_declaration
+    (13) const_section -> . CONST const_list
+    (16) type_section -> . TYPE type_list
+    (19) var_section -> . VAR var_list
+    (31) procedure_declaration -> . PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON
+    (32) function_declaration -> . FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
+
+    BEGIN           shift and go to state 14
+    CONST           shift and go to state 20
+    TYPE            shift and go to state 21
+    VAR             shift and go to state 22
+    PROCEDURE       shift and go to state 23
+    FUNCTION        shift and go to state 24
+
+    compound_stmt                  shift and go to state 12
+    section                        shift and go to state 13
+    const_section                  shift and go to state 15
+    type_section                   shift and go to state 16
+    var_section                    shift and go to state 17
+    procedure_declaration          shift and go to state 18
+    function_declaration           shift and go to state 19
+
+state 9
+
+    (7) declaration_sections -> empty .
+
+    BEGIN           reduce using rule 7 (declaration_sections -> empty .)
+    CONST           reduce using rule 7 (declaration_sections -> empty .)
+    TYPE            reduce using rule 7 (declaration_sections -> empty .)
+    VAR             reduce using rule 7 (declaration_sections -> empty .)
+    PROCEDURE       reduce using rule 7 (declaration_sections -> empty .)
+    FUNCTION        reduce using rule 7 (declaration_sections -> empty .)
+
+
+state 10
+
+    (2) uses_clause -> USES id_list . SEMICOLON
+    (5) id_list -> id_list . COMMA ID
+
+    SEMICOLON       shift and go to state 25
+    COMMA           shift and go to state 26
+
+
+state 11
+
+    (4) id_list -> ID .
+
+    SEMICOLON       reduce using rule 4 (id_list -> ID .)
+    COMMA           reduce using rule 4 (id_list -> ID .)
+    COLON           reduce using rule 4 (id_list -> ID .)
+
+
+state 12
+
+    (1) program -> PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt . DOT
+
+    DOT             shift and go to state 27
+
+
+state 13
+
+    (6) declaration_sections -> declaration_sections section .
+
+    BEGIN           reduce using rule 6 (declaration_sections -> declaration_sections section .)
+    CONST           reduce using rule 6 (declaration_sections -> declaration_sections section .)
+    TYPE            reduce using rule 6 (declaration_sections -> declaration_sections section .)
+    VAR             reduce using rule 6 (declaration_sections -> declaration_sections section .)
+    PROCEDURE       reduce using rule 6 (declaration_sections -> declaration_sections section .)
+    FUNCTION        reduce using rule 6 (declaration_sections -> declaration_sections section .)
+
+
+state 14
+
+    (33) compound_stmt -> BEGIN . statement_list END
+    (34) statement_list -> . statement_list statement
+    (35) statement_list -> . statement
+    (36) statement_list -> . empty
+    (37) statement -> . call_stmt SEMICOLON
+    (38) statement -> . assignment_stmt SEMICOLON
+    (39) statement -> . compound_stmt
+    (40) statement -> . if_stmt
+    (41) statement -> . for_stmt
+    (69) empty -> .
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+    (45) assignment_stmt -> . ID ASSIGN expression
+    (33) compound_stmt -> . BEGIN statement_list END
+    (42) if_stmt -> . IF LPAREN expression RPAREN THEN statement
+    (43) if_stmt -> . IF LPAREN expression RPAREN THEN statement ELSE statement
+    (44) for_stmt -> . FOR ID ASSIGN expression TO expression DO statement
+
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for BEGIN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for FOR resolved as shift
+    END             reduce using rule 69 (empty -> .)
+    ID              shift and go to state 36
+    BEGIN           shift and go to state 14
+    IF              shift and go to state 37
+    FOR             shift and go to state 38
+
+  ! ID              [ reduce using rule 69 (empty -> .) ]
+  ! BEGIN           [ reduce using rule 69 (empty -> .) ]
+  ! IF              [ reduce using rule 69 (empty -> .) ]
+  ! FOR             [ reduce using rule 69 (empty -> .) ]
+
+    statement_list                 shift and go to state 28
+    statement                      shift and go to state 29
+    empty                          shift and go to state 30
+    call_stmt                      shift and go to state 31
+    assignment_stmt                shift and go to state 32
+    compound_stmt                  shift and go to state 33
+    if_stmt                        shift and go to state 34
+    for_stmt                       shift and go to state 35
+
+state 15
+
+    (8) section -> const_section .
+
+    BEGIN           reduce using rule 8 (section -> const_section .)
+    CONST           reduce using rule 8 (section -> const_section .)
+    TYPE            reduce using rule 8 (section -> const_section .)
+    VAR             reduce using rule 8 (section -> const_section .)
+    PROCEDURE       reduce using rule 8 (section -> const_section .)
+    FUNCTION        reduce using rule 8 (section -> const_section .)
+
+
+state 16
+
+    (9) section -> type_section .
+
+    BEGIN           reduce using rule 9 (section -> type_section .)
+    CONST           reduce using rule 9 (section -> type_section .)
+    TYPE            reduce using rule 9 (section -> type_section .)
+    VAR             reduce using rule 9 (section -> type_section .)
+    PROCEDURE       reduce using rule 9 (section -> type_section .)
+    FUNCTION        reduce using rule 9 (section -> type_section .)
+
+
+state 17
+
+    (10) section -> var_section .
+
+    BEGIN           reduce using rule 10 (section -> var_section .)
+    CONST           reduce using rule 10 (section -> var_section .)
+    TYPE            reduce using rule 10 (section -> var_section .)
+    VAR             reduce using rule 10 (section -> var_section .)
+    PROCEDURE       reduce using rule 10 (section -> var_section .)
+    FUNCTION        reduce using rule 10 (section -> var_section .)
+
+
+state 18
+
+    (11) section -> procedure_declaration .
+
+    BEGIN           reduce using rule 11 (section -> procedure_declaration .)
+    CONST           reduce using rule 11 (section -> procedure_declaration .)
+    TYPE            reduce using rule 11 (section -> procedure_declaration .)
+    VAR             reduce using rule 11 (section -> procedure_declaration .)
+    PROCEDURE       reduce using rule 11 (section -> procedure_declaration .)
+    FUNCTION        reduce using rule 11 (section -> procedure_declaration .)
+
+
+state 19
+
+    (12) section -> function_declaration .
+
+    BEGIN           reduce using rule 12 (section -> function_declaration .)
+    CONST           reduce using rule 12 (section -> function_declaration .)
+    TYPE            reduce using rule 12 (section -> function_declaration .)
+    VAR             reduce using rule 12 (section -> function_declaration .)
+    PROCEDURE       reduce using rule 12 (section -> function_declaration .)
+    FUNCTION        reduce using rule 12 (section -> function_declaration .)
+
+
+state 20
+
+    (13) const_section -> CONST . const_list
+    (14) const_list -> . const_list ID EQUALS expression SEMICOLON
+    (15) const_list -> . ID EQUALS expression SEMICOLON
+
+    ID              shift and go to state 40
+
+    const_list                     shift and go to state 39
+
+state 21
+
+    (16) type_section -> TYPE . type_list
+    (17) type_list -> . type_list ID EQUALS type_specifier SEMICOLON
+    (18) type_list -> . ID EQUALS type_specifier SEMICOLON
+
+    ID              shift and go to state 42
+
+    type_list                      shift and go to state 41
+
+state 22
+
+    (19) var_section -> VAR . var_list
+    (20) var_list -> . var_list id_list COLON type_specifier SEMICOLON
+    (21) var_list -> . id_list COLON type_specifier SEMICOLON
+    (4) id_list -> . ID
+    (5) id_list -> . id_list COMMA ID
+
+    ID              shift and go to state 11
+
+    var_list                       shift and go to state 43
+    id_list                        shift and go to state 44
+
+state 23
+
+    (31) procedure_declaration -> PROCEDURE . ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON
+
+    ID              shift and go to state 45
+
+
+state 24
+
+    (32) function_declaration -> FUNCTION . ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
+
+    ID              shift and go to state 46
+
+
+state 25
+
+    (2) uses_clause -> USES id_list SEMICOLON .
+
+    BEGIN           reduce using rule 2 (uses_clause -> USES id_list SEMICOLON .)
+    CONST           reduce using rule 2 (uses_clause -> USES id_list SEMICOLON .)
+    TYPE            reduce using rule 2 (uses_clause -> USES id_list SEMICOLON .)
+    VAR             reduce using rule 2 (uses_clause -> USES id_list SEMICOLON .)
+    PROCEDURE       reduce using rule 2 (uses_clause -> USES id_list SEMICOLON .)
+    FUNCTION        reduce using rule 2 (uses_clause -> USES id_list SEMICOLON .)
+
+
+state 26
+
+    (5) id_list -> id_list COMMA . ID
+
+    ID              shift and go to state 47
+
+
+state 27
+
+    (1) program -> PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt DOT .
+
+    $end            reduce using rule 1 (program -> PROGRAM ID SEMICOLON uses_clause declaration_sections compound_stmt DOT .)
+
+
+state 28
+
+    (33) compound_stmt -> BEGIN statement_list . END
+    (34) statement_list -> statement_list . statement
+    (37) statement -> . call_stmt SEMICOLON
+    (38) statement -> . assignment_stmt SEMICOLON
+    (39) statement -> . compound_stmt
+    (40) statement -> . if_stmt
+    (41) statement -> . for_stmt
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+    (45) assignment_stmt -> . ID ASSIGN expression
+    (33) compound_stmt -> . BEGIN statement_list END
+    (42) if_stmt -> . IF LPAREN expression RPAREN THEN statement
+    (43) if_stmt -> . IF LPAREN expression RPAREN THEN statement ELSE statement
+    (44) for_stmt -> . FOR ID ASSIGN expression TO expression DO statement
+
+    END             shift and go to state 48
+    ID              shift and go to state 36
+    BEGIN           shift and go to state 14
+    IF              shift and go to state 37
+    FOR             shift and go to state 38
+
+    statement                      shift and go to state 49
+    call_stmt                      shift and go to state 31
+    assignment_stmt                shift and go to state 32
+    compound_stmt                  shift and go to state 33
+    if_stmt                        shift and go to state 34
+    for_stmt                       shift and go to state 35
+
+state 29
+
+    (35) statement_list -> statement .
+
+    END             reduce using rule 35 (statement_list -> statement .)
+    ID              reduce using rule 35 (statement_list -> statement .)
+    BEGIN           reduce using rule 35 (statement_list -> statement .)
+    IF              reduce using rule 35 (statement_list -> statement .)
+    FOR             reduce using rule 35 (statement_list -> statement .)
+
+
+state 30
+
+    (36) statement_list -> empty .
+
+    END             reduce using rule 36 (statement_list -> empty .)
+    ID              reduce using rule 36 (statement_list -> empty .)
+    BEGIN           reduce using rule 36 (statement_list -> empty .)
+    IF              reduce using rule 36 (statement_list -> empty .)
+    FOR             reduce using rule 36 (statement_list -> empty .)
+
+
+state 31
+
+    (37) statement -> call_stmt . SEMICOLON
+
+    SEMICOLON       shift and go to state 50
+
+
+state 32
+
+    (38) statement -> assignment_stmt . SEMICOLON
+
+    SEMICOLON       shift and go to state 51
+
+
+state 33
+
+    (39) statement -> compound_stmt .
+
+    END             reduce using rule 39 (statement -> compound_stmt .)
+    ID              reduce using rule 39 (statement -> compound_stmt .)
+    BEGIN           reduce using rule 39 (statement -> compound_stmt .)
+    IF              reduce using rule 39 (statement -> compound_stmt .)
+    FOR             reduce using rule 39 (statement -> compound_stmt .)
+    ELSE            reduce using rule 39 (statement -> compound_stmt .)
+
+
+state 34
+
+    (40) statement -> if_stmt .
+
+    END             reduce using rule 40 (statement -> if_stmt .)
+    ID              reduce using rule 40 (statement -> if_stmt .)
+    BEGIN           reduce using rule 40 (statement -> if_stmt .)
+    IF              reduce using rule 40 (statement -> if_stmt .)
+    FOR             reduce using rule 40 (statement -> if_stmt .)
+    ELSE            reduce using rule 40 (statement -> if_stmt .)
+
+
+state 35
+
+    (41) statement -> for_stmt .
+
+    END             reduce using rule 41 (statement -> for_stmt .)
+    ID              reduce using rule 41 (statement -> for_stmt .)
+    BEGIN           reduce using rule 41 (statement -> for_stmt .)
+    IF              reduce using rule 41 (statement -> for_stmt .)
+    FOR             reduce using rule 41 (statement -> for_stmt .)
+    ELSE            reduce using rule 41 (statement -> for_stmt .)
+
+
+state 36
+
+    (46) call_stmt -> ID . LPAREN expression_list RPAREN
+    (47) call_stmt -> ID .
+    (45) assignment_stmt -> ID . ASSIGN expression
+
+    LPAREN          shift and go to state 52
+    SEMICOLON       reduce using rule 47 (call_stmt -> ID .)
+    ASSIGN          shift and go to state 53
+
+
+state 37
+
+    (42) if_stmt -> IF . LPAREN expression RPAREN THEN statement
+    (43) if_stmt -> IF . LPAREN expression RPAREN THEN statement ELSE statement
+
+    LPAREN          shift and go to state 54
+
+
+state 38
+
+    (44) for_stmt -> FOR . ID ASSIGN expression TO expression DO statement
+
+    ID              shift and go to state 55
+
+
+state 39
+
+    (13) const_section -> CONST const_list .
+    (14) const_list -> const_list . ID EQUALS expression SEMICOLON
+
+    BEGIN           reduce using rule 13 (const_section -> CONST const_list .)
+    CONST           reduce using rule 13 (const_section -> CONST const_list .)
+    TYPE            reduce using rule 13 (const_section -> CONST const_list .)
+    VAR             reduce using rule 13 (const_section -> CONST const_list .)
+    PROCEDURE       reduce using rule 13 (const_section -> CONST const_list .)
+    FUNCTION        reduce using rule 13 (const_section -> CONST const_list .)
+    ID              shift and go to state 56
+
+
+state 40
+
+    (15) const_list -> ID . EQUALS expression SEMICOLON
+
+    EQUALS          shift and go to state 57
+
+
+state 41
+
+    (16) type_section -> TYPE type_list .
+    (17) type_list -> type_list . ID EQUALS type_specifier SEMICOLON
+
+    BEGIN           reduce using rule 16 (type_section -> TYPE type_list .)
+    CONST           reduce using rule 16 (type_section -> TYPE type_list .)
+    TYPE            reduce using rule 16 (type_section -> TYPE type_list .)
+    VAR             reduce using rule 16 (type_section -> TYPE type_list .)
+    PROCEDURE       reduce using rule 16 (type_section -> TYPE type_list .)
+    FUNCTION        reduce using rule 16 (type_section -> TYPE type_list .)
+    ID              shift and go to state 58
+
+
+state 42
+
+    (18) type_list -> ID . EQUALS type_specifier SEMICOLON
+
+    EQUALS          shift and go to state 59
+
+
+state 43
+
+    (19) var_section -> VAR var_list .
+    (20) var_list -> var_list . id_list COLON type_specifier SEMICOLON
+    (4) id_list -> . ID
+    (5) id_list -> . id_list COMMA ID
+
+    BEGIN           reduce using rule 19 (var_section -> VAR var_list .)
+    CONST           reduce using rule 19 (var_section -> VAR var_list .)
+    TYPE            reduce using rule 19 (var_section -> VAR var_list .)
+    VAR             reduce using rule 19 (var_section -> VAR var_list .)
+    PROCEDURE       reduce using rule 19 (var_section -> VAR var_list .)
+    FUNCTION        reduce using rule 19 (var_section -> VAR var_list .)
+    ID              shift and go to state 11
+
+    id_list                        shift and go to state 60
+
+state 44
+
+    (21) var_list -> id_list . COLON type_specifier SEMICOLON
+    (5) id_list -> id_list . COMMA ID
+
+    COLON           shift and go to state 61
+    COMMA           shift and go to state 26
+
+
+state 45
+
+    (31) procedure_declaration -> PROCEDURE ID . LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON
+
+    LPAREN          shift and go to state 62
+
+
+state 46
+
+    (32) function_declaration -> FUNCTION ID . LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
+
+    LPAREN          shift and go to state 63
+
+
+state 47
+
+    (5) id_list -> id_list COMMA ID .
+
+    SEMICOLON       reduce using rule 5 (id_list -> id_list COMMA ID .)
+    COMMA           reduce using rule 5 (id_list -> id_list COMMA ID .)
+    COLON           reduce using rule 5 (id_list -> id_list COMMA ID .)
+
+
+state 48
+
+    (33) compound_stmt -> BEGIN statement_list END .
+
+    DOT             reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+    END             reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+    ID              reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+    BEGIN           reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+    IF              reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+    FOR             reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+    ELSE            reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+    SEMICOLON       reduce using rule 33 (compound_stmt -> BEGIN statement_list END .)
+
+
+state 49
+
+    (34) statement_list -> statement_list statement .
+
+    END             reduce using rule 34 (statement_list -> statement_list statement .)
+    ID              reduce using rule 34 (statement_list -> statement_list statement .)
+    BEGIN           reduce using rule 34 (statement_list -> statement_list statement .)
+    IF              reduce using rule 34 (statement_list -> statement_list statement .)
+    FOR             reduce using rule 34 (statement_list -> statement_list statement .)
+
+
+state 50
+
+    (37) statement -> call_stmt SEMICOLON .
+
+    END             reduce using rule 37 (statement -> call_stmt SEMICOLON .)
+    ID              reduce using rule 37 (statement -> call_stmt SEMICOLON .)
+    BEGIN           reduce using rule 37 (statement -> call_stmt SEMICOLON .)
+    IF              reduce using rule 37 (statement -> call_stmt SEMICOLON .)
+    FOR             reduce using rule 37 (statement -> call_stmt SEMICOLON .)
+    ELSE            reduce using rule 37 (statement -> call_stmt SEMICOLON .)
+
+
+state 51
+
+    (38) statement -> assignment_stmt SEMICOLON .
+
+    END             reduce using rule 38 (statement -> assignment_stmt SEMICOLON .)
+    ID              reduce using rule 38 (statement -> assignment_stmt SEMICOLON .)
+    BEGIN           reduce using rule 38 (statement -> assignment_stmt SEMICOLON .)
+    IF              reduce using rule 38 (statement -> assignment_stmt SEMICOLON .)
+    FOR             reduce using rule 38 (statement -> assignment_stmt SEMICOLON .)
+    ELSE            reduce using rule 38 (statement -> assignment_stmt SEMICOLON .)
+
+
+state 52
+
+    (46) call_stmt -> ID LPAREN . expression_list RPAREN
+    (52) expression_list -> . expression_list COMMA expression
+    (53) expression_list -> . expression
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression_list                shift and go to state 66
+    expression                     shift and go to state 67
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 53
+
+    (45) assignment_stmt -> ID ASSIGN . expression
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 73
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 54
+
+    (42) if_stmt -> IF LPAREN . expression RPAREN THEN statement
+    (43) if_stmt -> IF LPAREN . expression RPAREN THEN statement ELSE statement
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 74
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 55
+
+    (44) for_stmt -> FOR ID . ASSIGN expression TO expression DO statement
+
+    ASSIGN          shift and go to state 75
+
+
+state 56
+
+    (14) const_list -> const_list ID . EQUALS expression SEMICOLON
+
+    EQUALS          shift and go to state 76
+
+
+state 57
+
+    (15) const_list -> ID EQUALS . expression SEMICOLON
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 77
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 58
+
+    (17) type_list -> type_list ID . EQUALS type_specifier SEMICOLON
+
+    EQUALS          shift and go to state 78
+
+
+state 59
+
+    (18) type_list -> ID EQUALS . type_specifier SEMICOLON
+    (22) type_specifier -> . ID
+    (23) type_specifier -> . type_base
+    (24) type_specifier -> . ARRAY LBRACKET range RBRACKET OF type_base
+    (25) type_specifier -> . STRING LBRACKET NUMBER RBRACKET
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    ID              shift and go to state 79
+    ARRAY           shift and go to state 82
+    STRING          shift and go to state 83
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_specifier                 shift and go to state 80
+    type_base                      shift and go to state 81
+
+state 60
+
+    (20) var_list -> var_list id_list . COLON type_specifier SEMICOLON
+    (5) id_list -> id_list . COMMA ID
+
+    COLON           shift and go to state 88
+    COMMA           shift and go to state 26
+
+
+state 61
+
+    (21) var_list -> id_list COLON . type_specifier SEMICOLON
+    (22) type_specifier -> . ID
+    (23) type_specifier -> . type_base
+    (24) type_specifier -> . ARRAY LBRACKET range RBRACKET OF type_base
+    (25) type_specifier -> . STRING LBRACKET NUMBER RBRACKET
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    ID              shift and go to state 79
+    ARRAY           shift and go to state 82
+    STRING          shift and go to state 83
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_specifier                 shift and go to state 89
+    type_base                      shift and go to state 81
+
+state 62
+
+    (31) procedure_declaration -> PROCEDURE ID LPAREN . args RPAREN SEMICOLON compound_stmt SEMICOLON
+    (48) args -> . arg_list
+    (49) args -> . empty
+    (50) arg_list -> . ID COLON type_specifier
+    (51) arg_list -> . arg_list SEMICOLON ID COLON type_specifier
+    (69) empty -> .
+
+    ID              shift and go to state 90
+    RPAREN          reduce using rule 69 (empty -> .)
+
+    args                           shift and go to state 91
+    arg_list                       shift and go to state 92
+    empty                          shift and go to state 93
+
+state 63
+
+    (32) function_declaration -> FUNCTION ID LPAREN . args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
+    (48) args -> . arg_list
+    (49) args -> . empty
+    (50) arg_list -> . ID COLON type_specifier
+    (51) arg_list -> . arg_list SEMICOLON ID COLON type_specifier
+    (69) empty -> .
+
+    ID              shift and go to state 90
+    RPAREN          reduce using rule 69 (empty -> .)
+
+    args                           shift and go to state 94
+    arg_list                       shift and go to state 92
+    empty                          shift and go to state 93
+
+state 64
+
+    (46) call_stmt -> ID . LPAREN expression_list RPAREN
+    (47) call_stmt -> ID .
+
+    LPAREN          shift and go to state 52
+    TIMES           reduce using rule 47 (call_stmt -> ID .)
+    DIVIDE          reduce using rule 47 (call_stmt -> ID .)
+    PLUS            reduce using rule 47 (call_stmt -> ID .)
+    MINUS           reduce using rule 47 (call_stmt -> ID .)
+    GREATER         reduce using rule 47 (call_stmt -> ID .)
+    LESS            reduce using rule 47 (call_stmt -> ID .)
+    GREATEREQUAL    reduce using rule 47 (call_stmt -> ID .)
+    LESSEQUAL       reduce using rule 47 (call_stmt -> ID .)
+    NOTEQUAL        reduce using rule 47 (call_stmt -> ID .)
+    RPAREN          reduce using rule 47 (call_stmt -> ID .)
+    COMMA           reduce using rule 47 (call_stmt -> ID .)
+    SEMICOLON       reduce using rule 47 (call_stmt -> ID .)
+    TO              reduce using rule 47 (call_stmt -> ID .)
+    DO              reduce using rule 47 (call_stmt -> ID .)
+
+
+state 65
+
+    (68) factor -> LPAREN . expression RPAREN
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 95
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 66
+
+    (46) call_stmt -> ID LPAREN expression_list . RPAREN
+    (52) expression_list -> expression_list . COMMA expression
+
+    RPAREN          shift and go to state 96
+    COMMA           shift and go to state 97
+
+
+state 67
+
+    (53) expression_list -> expression .
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    RPAREN          reduce using rule 53 (expression_list -> expression .)
+    COMMA           reduce using rule 53 (expression_list -> expression .)
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 68
+
+    (54) expression -> term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 54 (expression -> term .)
+    MINUS           reduce using rule 54 (expression -> term .)
+    GREATER         reduce using rule 54 (expression -> term .)
+    LESS            reduce using rule 54 (expression -> term .)
+    GREATEREQUAL    reduce using rule 54 (expression -> term .)
+    LESSEQUAL       reduce using rule 54 (expression -> term .)
+    NOTEQUAL        reduce using rule 54 (expression -> term .)
+    RPAREN          reduce using rule 54 (expression -> term .)
+    COMMA           reduce using rule 54 (expression -> term .)
+    SEMICOLON       reduce using rule 54 (expression -> term .)
+    TO              reduce using rule 54 (expression -> term .)
+    DO              reduce using rule 54 (expression -> term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 69
+
+    (62) term -> factor .
+
+    TIMES           reduce using rule 62 (term -> factor .)
+    DIVIDE          reduce using rule 62 (term -> factor .)
+    PLUS            reduce using rule 62 (term -> factor .)
+    MINUS           reduce using rule 62 (term -> factor .)
+    GREATER         reduce using rule 62 (term -> factor .)
+    LESS            reduce using rule 62 (term -> factor .)
+    GREATEREQUAL    reduce using rule 62 (term -> factor .)
+    LESSEQUAL       reduce using rule 62 (term -> factor .)
+    NOTEQUAL        reduce using rule 62 (term -> factor .)
+    RPAREN          reduce using rule 62 (term -> factor .)
+    COMMA           reduce using rule 62 (term -> factor .)
+    SEMICOLON       reduce using rule 62 (term -> factor .)
+    TO              reduce using rule 62 (term -> factor .)
+    DO              reduce using rule 62 (term -> factor .)
+
+
+state 70
+
+    (65) factor -> NUMBER .
+
+    TIMES           reduce using rule 65 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 65 (factor -> NUMBER .)
+    PLUS            reduce using rule 65 (factor -> NUMBER .)
+    MINUS           reduce using rule 65 (factor -> NUMBER .)
+    GREATER         reduce using rule 65 (factor -> NUMBER .)
+    LESS            reduce using rule 65 (factor -> NUMBER .)
+    GREATEREQUAL    reduce using rule 65 (factor -> NUMBER .)
+    LESSEQUAL       reduce using rule 65 (factor -> NUMBER .)
+    NOTEQUAL        reduce using rule 65 (factor -> NUMBER .)
+    RPAREN          reduce using rule 65 (factor -> NUMBER .)
+    COMMA           reduce using rule 65 (factor -> NUMBER .)
+    SEMICOLON       reduce using rule 65 (factor -> NUMBER .)
+    TO              reduce using rule 65 (factor -> NUMBER .)
+    DO              reduce using rule 65 (factor -> NUMBER .)
+
+
+state 71
+
+    (66) factor -> STRING .
+
+    TIMES           reduce using rule 66 (factor -> STRING .)
+    DIVIDE          reduce using rule 66 (factor -> STRING .)
+    PLUS            reduce using rule 66 (factor -> STRING .)
+    MINUS           reduce using rule 66 (factor -> STRING .)
+    GREATER         reduce using rule 66 (factor -> STRING .)
+    LESS            reduce using rule 66 (factor -> STRING .)
+    GREATEREQUAL    reduce using rule 66 (factor -> STRING .)
+    LESSEQUAL       reduce using rule 66 (factor -> STRING .)
+    NOTEQUAL        reduce using rule 66 (factor -> STRING .)
+    RPAREN          reduce using rule 66 (factor -> STRING .)
+    COMMA           reduce using rule 66 (factor -> STRING .)
+    SEMICOLON       reduce using rule 66 (factor -> STRING .)
+    TO              reduce using rule 66 (factor -> STRING .)
+    DO              reduce using rule 66 (factor -> STRING .)
+
+
+state 72
+
+    (67) factor -> call_stmt .
+
+    TIMES           reduce using rule 67 (factor -> call_stmt .)
+    DIVIDE          reduce using rule 67 (factor -> call_stmt .)
+    PLUS            reduce using rule 67 (factor -> call_stmt .)
+    MINUS           reduce using rule 67 (factor -> call_stmt .)
+    GREATER         reduce using rule 67 (factor -> call_stmt .)
+    LESS            reduce using rule 67 (factor -> call_stmt .)
+    GREATEREQUAL    reduce using rule 67 (factor -> call_stmt .)
+    LESSEQUAL       reduce using rule 67 (factor -> call_stmt .)
+    NOTEQUAL        reduce using rule 67 (factor -> call_stmt .)
+    RPAREN          reduce using rule 67 (factor -> call_stmt .)
+    COMMA           reduce using rule 67 (factor -> call_stmt .)
+    SEMICOLON       reduce using rule 67 (factor -> call_stmt .)
+    TO              reduce using rule 67 (factor -> call_stmt .)
+    DO              reduce using rule 67 (factor -> call_stmt .)
+
+
+state 73
+
+    (45) assignment_stmt -> ID ASSIGN expression .
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    SEMICOLON       reduce using rule 45 (assignment_stmt -> ID ASSIGN expression .)
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 74
+
+    (42) if_stmt -> IF LPAREN expression . RPAREN THEN statement
+    (43) if_stmt -> IF LPAREN expression . RPAREN THEN statement ELSE statement
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    RPAREN          shift and go to state 107
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 75
+
+    (44) for_stmt -> FOR ID ASSIGN . expression TO expression DO statement
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 108
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 76
+
+    (14) const_list -> const_list ID EQUALS . expression SEMICOLON
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 109
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 77
+
+    (15) const_list -> ID EQUALS expression . SEMICOLON
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    SEMICOLON       shift and go to state 110
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 78
+
+    (17) type_list -> type_list ID EQUALS . type_specifier SEMICOLON
+    (22) type_specifier -> . ID
+    (23) type_specifier -> . type_base
+    (24) type_specifier -> . ARRAY LBRACKET range RBRACKET OF type_base
+    (25) type_specifier -> . STRING LBRACKET NUMBER RBRACKET
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    ID              shift and go to state 79
+    ARRAY           shift and go to state 82
+    STRING          shift and go to state 83
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_specifier                 shift and go to state 111
+    type_base                      shift and go to state 81
+
+state 79
+
+    (22) type_specifier -> ID .
+
+    SEMICOLON       reduce using rule 22 (type_specifier -> ID .)
+    RPAREN          reduce using rule 22 (type_specifier -> ID .)
+
+
+state 80
+
+    (18) type_list -> ID EQUALS type_specifier . SEMICOLON
+
+    SEMICOLON       shift and go to state 112
+
+
+state 81
+
+    (23) type_specifier -> type_base .
+
+    SEMICOLON       reduce using rule 23 (type_specifier -> type_base .)
+    RPAREN          reduce using rule 23 (type_specifier -> type_base .)
+
+
+state 82
+
+    (24) type_specifier -> ARRAY . LBRACKET range RBRACKET OF type_base
+
+    LBRACKET        shift and go to state 113
+
+
+state 83
+
+    (25) type_specifier -> STRING . LBRACKET NUMBER RBRACKET
+
+    LBRACKET        shift and go to state 114
+
+
+state 84
+
+    (26) type_base -> INTEGER .
+
+    SEMICOLON       reduce using rule 26 (type_base -> INTEGER .)
+    RPAREN          reduce using rule 26 (type_base -> INTEGER .)
+
+
+state 85
+
+    (27) type_base -> REAL .
+
+    SEMICOLON       reduce using rule 27 (type_base -> REAL .)
+    RPAREN          reduce using rule 27 (type_base -> REAL .)
+
+
+state 86
+
+    (28) type_base -> CHAR .
+
+    SEMICOLON       reduce using rule 28 (type_base -> CHAR .)
+    RPAREN          reduce using rule 28 (type_base -> CHAR .)
+
+
+state 87
+
+    (29) type_base -> BOOLEAN .
+
+    SEMICOLON       reduce using rule 29 (type_base -> BOOLEAN .)
+    RPAREN          reduce using rule 29 (type_base -> BOOLEAN .)
+
+
+state 88
+
+    (20) var_list -> var_list id_list COLON . type_specifier SEMICOLON
+    (22) type_specifier -> . ID
+    (23) type_specifier -> . type_base
+    (24) type_specifier -> . ARRAY LBRACKET range RBRACKET OF type_base
+    (25) type_specifier -> . STRING LBRACKET NUMBER RBRACKET
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    ID              shift and go to state 79
+    ARRAY           shift and go to state 82
+    STRING          shift and go to state 83
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_specifier                 shift and go to state 115
+    type_base                      shift and go to state 81
+
+state 89
+
+    (21) var_list -> id_list COLON type_specifier . SEMICOLON
+
+    SEMICOLON       shift and go to state 116
+
+
+state 90
+
+    (50) arg_list -> ID . COLON type_specifier
+
+    COLON           shift and go to state 117
+
+
+state 91
+
+    (31) procedure_declaration -> PROCEDURE ID LPAREN args . RPAREN SEMICOLON compound_stmt SEMICOLON
+
+    RPAREN          shift and go to state 118
+
+
+state 92
+
+    (48) args -> arg_list .
+    (51) arg_list -> arg_list . SEMICOLON ID COLON type_specifier
+
+    RPAREN          reduce using rule 48 (args -> arg_list .)
+    SEMICOLON       shift and go to state 119
+
+
+state 93
+
+    (49) args -> empty .
+
+    RPAREN          reduce using rule 49 (args -> empty .)
+
+
+state 94
+
+    (32) function_declaration -> FUNCTION ID LPAREN args . RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON
+
+    RPAREN          shift and go to state 120
+
+
+state 95
+
+    (68) factor -> LPAREN expression . RPAREN
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    RPAREN          shift and go to state 121
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 96
+
+    (46) call_stmt -> ID LPAREN expression_list RPAREN .
+
+    SEMICOLON       reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    TIMES           reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    DIVIDE          reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    PLUS            reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    MINUS           reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    GREATER         reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    LESS            reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    GREATEREQUAL    reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    LESSEQUAL       reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    NOTEQUAL        reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    RPAREN          reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    COMMA           reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    TO              reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+    DO              reduce using rule 46 (call_stmt -> ID LPAREN expression_list RPAREN .)
+
+
+state 97
+
+    (52) expression_list -> expression_list COMMA . expression
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 122
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 98
+
+    (55) expression -> expression PLUS . term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    term                           shift and go to state 123
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 99
+
+    (56) expression -> expression MINUS . term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    term                           shift and go to state 124
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 100
+
+    (57) expression -> expression GREATER . term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    term                           shift and go to state 125
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 101
+
+    (58) expression -> expression LESS . term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    term                           shift and go to state 126
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 102
+
+    (59) expression -> expression GREATEREQUAL . term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    term                           shift and go to state 127
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 103
+
+    (60) expression -> expression LESSEQUAL . term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    term                           shift and go to state 128
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 104
+
+    (61) expression -> expression NOTEQUAL . term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    term                           shift and go to state 129
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 105
+
+    (63) term -> term TIMES . factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    factor                         shift and go to state 130
+    call_stmt                      shift and go to state 72
+
+state 106
+
+    (64) term -> term DIVIDE . factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    factor                         shift and go to state 131
+    call_stmt                      shift and go to state 72
+
+state 107
+
+    (42) if_stmt -> IF LPAREN expression RPAREN . THEN statement
+    (43) if_stmt -> IF LPAREN expression RPAREN . THEN statement ELSE statement
+
+    THEN            shift and go to state 132
+
+
+state 108
+
+    (44) for_stmt -> FOR ID ASSIGN expression . TO expression DO statement
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    TO              shift and go to state 133
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 109
+
+    (14) const_list -> const_list ID EQUALS expression . SEMICOLON
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    SEMICOLON       shift and go to state 134
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 110
+
+    (15) const_list -> ID EQUALS expression SEMICOLON .
+
+    ID              reduce using rule 15 (const_list -> ID EQUALS expression SEMICOLON .)
+    BEGIN           reduce using rule 15 (const_list -> ID EQUALS expression SEMICOLON .)
+    CONST           reduce using rule 15 (const_list -> ID EQUALS expression SEMICOLON .)
+    TYPE            reduce using rule 15 (const_list -> ID EQUALS expression SEMICOLON .)
+    VAR             reduce using rule 15 (const_list -> ID EQUALS expression SEMICOLON .)
+    PROCEDURE       reduce using rule 15 (const_list -> ID EQUALS expression SEMICOLON .)
+    FUNCTION        reduce using rule 15 (const_list -> ID EQUALS expression SEMICOLON .)
+
+
+state 111
+
+    (17) type_list -> type_list ID EQUALS type_specifier . SEMICOLON
+
+    SEMICOLON       shift and go to state 135
+
+
+state 112
+
+    (18) type_list -> ID EQUALS type_specifier SEMICOLON .
+
+    ID              reduce using rule 18 (type_list -> ID EQUALS type_specifier SEMICOLON .)
+    BEGIN           reduce using rule 18 (type_list -> ID EQUALS type_specifier SEMICOLON .)
+    CONST           reduce using rule 18 (type_list -> ID EQUALS type_specifier SEMICOLON .)
+    TYPE            reduce using rule 18 (type_list -> ID EQUALS type_specifier SEMICOLON .)
+    VAR             reduce using rule 18 (type_list -> ID EQUALS type_specifier SEMICOLON .)
+    PROCEDURE       reduce using rule 18 (type_list -> ID EQUALS type_specifier SEMICOLON .)
+    FUNCTION        reduce using rule 18 (type_list -> ID EQUALS type_specifier SEMICOLON .)
+
+
+state 113
+
+    (24) type_specifier -> ARRAY LBRACKET . range RBRACKET OF type_base
+    (30) range -> . NUMBER DOT DOT NUMBER
+
+    NUMBER          shift and go to state 137
+
+    range                          shift and go to state 136
+
+state 114
+
+    (25) type_specifier -> STRING LBRACKET . NUMBER RBRACKET
+
+    NUMBER          shift and go to state 138
+
+
+state 115
+
+    (20) var_list -> var_list id_list COLON type_specifier . SEMICOLON
+
+    SEMICOLON       shift and go to state 139
+
+
+state 116
+
+    (21) var_list -> id_list COLON type_specifier SEMICOLON .
+
+    ID              reduce using rule 21 (var_list -> id_list COLON type_specifier SEMICOLON .)
+    BEGIN           reduce using rule 21 (var_list -> id_list COLON type_specifier SEMICOLON .)
+    CONST           reduce using rule 21 (var_list -> id_list COLON type_specifier SEMICOLON .)
+    TYPE            reduce using rule 21 (var_list -> id_list COLON type_specifier SEMICOLON .)
+    VAR             reduce using rule 21 (var_list -> id_list COLON type_specifier SEMICOLON .)
+    PROCEDURE       reduce using rule 21 (var_list -> id_list COLON type_specifier SEMICOLON .)
+    FUNCTION        reduce using rule 21 (var_list -> id_list COLON type_specifier SEMICOLON .)
+
+
+state 117
+
+    (50) arg_list -> ID COLON . type_specifier
+    (22) type_specifier -> . ID
+    (23) type_specifier -> . type_base
+    (24) type_specifier -> . ARRAY LBRACKET range RBRACKET OF type_base
+    (25) type_specifier -> . STRING LBRACKET NUMBER RBRACKET
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    ID              shift and go to state 79
+    ARRAY           shift and go to state 82
+    STRING          shift and go to state 83
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_specifier                 shift and go to state 140
+    type_base                      shift and go to state 81
+
+state 118
+
+    (31) procedure_declaration -> PROCEDURE ID LPAREN args RPAREN . SEMICOLON compound_stmt SEMICOLON
+
+    SEMICOLON       shift and go to state 141
+
+
+state 119
+
+    (51) arg_list -> arg_list SEMICOLON . ID COLON type_specifier
+
+    ID              shift and go to state 142
+
+
+state 120
+
+    (32) function_declaration -> FUNCTION ID LPAREN args RPAREN . COLON type_specifier SEMICOLON compound_stmt SEMICOLON
+
+    COLON           shift and go to state 143
+
+
+state 121
+
+    (68) factor -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    GREATER         reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    LESS            reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    GREATEREQUAL    reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    LESSEQUAL       reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    NOTEQUAL        reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    TO              reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+    DO              reduce using rule 68 (factor -> LPAREN expression RPAREN .)
+
+
+state 122
+
+    (52) expression_list -> expression_list COMMA expression .
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    RPAREN          reduce using rule 52 (expression_list -> expression_list COMMA expression .)
+    COMMA           reduce using rule 52 (expression_list -> expression_list COMMA expression .)
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 123
+
+    (55) expression -> expression PLUS term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 55 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 55 (expression -> expression PLUS term .)
+    GREATER         reduce using rule 55 (expression -> expression PLUS term .)
+    LESS            reduce using rule 55 (expression -> expression PLUS term .)
+    GREATEREQUAL    reduce using rule 55 (expression -> expression PLUS term .)
+    LESSEQUAL       reduce using rule 55 (expression -> expression PLUS term .)
+    NOTEQUAL        reduce using rule 55 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 55 (expression -> expression PLUS term .)
+    COMMA           reduce using rule 55 (expression -> expression PLUS term .)
+    SEMICOLON       reduce using rule 55 (expression -> expression PLUS term .)
+    TO              reduce using rule 55 (expression -> expression PLUS term .)
+    DO              reduce using rule 55 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 124
+
+    (56) expression -> expression MINUS term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 56 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 56 (expression -> expression MINUS term .)
+    GREATER         reduce using rule 56 (expression -> expression MINUS term .)
+    LESS            reduce using rule 56 (expression -> expression MINUS term .)
+    GREATEREQUAL    reduce using rule 56 (expression -> expression MINUS term .)
+    LESSEQUAL       reduce using rule 56 (expression -> expression MINUS term .)
+    NOTEQUAL        reduce using rule 56 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 56 (expression -> expression MINUS term .)
+    COMMA           reduce using rule 56 (expression -> expression MINUS term .)
+    SEMICOLON       reduce using rule 56 (expression -> expression MINUS term .)
+    TO              reduce using rule 56 (expression -> expression MINUS term .)
+    DO              reduce using rule 56 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 125
+
+    (57) expression -> expression GREATER term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 57 (expression -> expression GREATER term .)
+    MINUS           reduce using rule 57 (expression -> expression GREATER term .)
+    GREATER         reduce using rule 57 (expression -> expression GREATER term .)
+    LESS            reduce using rule 57 (expression -> expression GREATER term .)
+    GREATEREQUAL    reduce using rule 57 (expression -> expression GREATER term .)
+    LESSEQUAL       reduce using rule 57 (expression -> expression GREATER term .)
+    NOTEQUAL        reduce using rule 57 (expression -> expression GREATER term .)
+    RPAREN          reduce using rule 57 (expression -> expression GREATER term .)
+    COMMA           reduce using rule 57 (expression -> expression GREATER term .)
+    SEMICOLON       reduce using rule 57 (expression -> expression GREATER term .)
+    TO              reduce using rule 57 (expression -> expression GREATER term .)
+    DO              reduce using rule 57 (expression -> expression GREATER term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 126
+
+    (58) expression -> expression LESS term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 58 (expression -> expression LESS term .)
+    MINUS           reduce using rule 58 (expression -> expression LESS term .)
+    GREATER         reduce using rule 58 (expression -> expression LESS term .)
+    LESS            reduce using rule 58 (expression -> expression LESS term .)
+    GREATEREQUAL    reduce using rule 58 (expression -> expression LESS term .)
+    LESSEQUAL       reduce using rule 58 (expression -> expression LESS term .)
+    NOTEQUAL        reduce using rule 58 (expression -> expression LESS term .)
+    RPAREN          reduce using rule 58 (expression -> expression LESS term .)
+    COMMA           reduce using rule 58 (expression -> expression LESS term .)
+    SEMICOLON       reduce using rule 58 (expression -> expression LESS term .)
+    TO              reduce using rule 58 (expression -> expression LESS term .)
+    DO              reduce using rule 58 (expression -> expression LESS term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 127
+
+    (59) expression -> expression GREATEREQUAL term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    MINUS           reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    GREATER         reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    LESS            reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    GREATEREQUAL    reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    LESSEQUAL       reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    NOTEQUAL        reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    RPAREN          reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    COMMA           reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    SEMICOLON       reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    TO              reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    DO              reduce using rule 59 (expression -> expression GREATEREQUAL term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 128
+
+    (60) expression -> expression LESSEQUAL term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    MINUS           reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    GREATER         reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    LESS            reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    GREATEREQUAL    reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    LESSEQUAL       reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    NOTEQUAL        reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    RPAREN          reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    COMMA           reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    SEMICOLON       reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    TO              reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    DO              reduce using rule 60 (expression -> expression LESSEQUAL term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 129
+
+    (61) expression -> expression NOTEQUAL term .
+    (63) term -> term . TIMES factor
+    (64) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    MINUS           reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    GREATER         reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    LESS            reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    GREATEREQUAL    reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    LESSEQUAL       reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    NOTEQUAL        reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    RPAREN          reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    COMMA           reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    SEMICOLON       reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    TO              reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    DO              reduce using rule 61 (expression -> expression NOTEQUAL term .)
+    TIMES           shift and go to state 105
+    DIVIDE          shift and go to state 106
+
+
+state 130
+
+    (63) term -> term TIMES factor .
+
+    TIMES           reduce using rule 63 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 63 (term -> term TIMES factor .)
+    PLUS            reduce using rule 63 (term -> term TIMES factor .)
+    MINUS           reduce using rule 63 (term -> term TIMES factor .)
+    GREATER         reduce using rule 63 (term -> term TIMES factor .)
+    LESS            reduce using rule 63 (term -> term TIMES factor .)
+    GREATEREQUAL    reduce using rule 63 (term -> term TIMES factor .)
+    LESSEQUAL       reduce using rule 63 (term -> term TIMES factor .)
+    NOTEQUAL        reduce using rule 63 (term -> term TIMES factor .)
+    RPAREN          reduce using rule 63 (term -> term TIMES factor .)
+    COMMA           reduce using rule 63 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 63 (term -> term TIMES factor .)
+    TO              reduce using rule 63 (term -> term TIMES factor .)
+    DO              reduce using rule 63 (term -> term TIMES factor .)
+
+
+state 131
+
+    (64) term -> term DIVIDE factor .
+
+    TIMES           reduce using rule 64 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 64 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 64 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 64 (term -> term DIVIDE factor .)
+    GREATER         reduce using rule 64 (term -> term DIVIDE factor .)
+    LESS            reduce using rule 64 (term -> term DIVIDE factor .)
+    GREATEREQUAL    reduce using rule 64 (term -> term DIVIDE factor .)
+    LESSEQUAL       reduce using rule 64 (term -> term DIVIDE factor .)
+    NOTEQUAL        reduce using rule 64 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 64 (term -> term DIVIDE factor .)
+    COMMA           reduce using rule 64 (term -> term DIVIDE factor .)
+    SEMICOLON       reduce using rule 64 (term -> term DIVIDE factor .)
+    TO              reduce using rule 64 (term -> term DIVIDE factor .)
+    DO              reduce using rule 64 (term -> term DIVIDE factor .)
+
+
+state 132
+
+    (42) if_stmt -> IF LPAREN expression RPAREN THEN . statement
+    (43) if_stmt -> IF LPAREN expression RPAREN THEN . statement ELSE statement
+    (37) statement -> . call_stmt SEMICOLON
+    (38) statement -> . assignment_stmt SEMICOLON
+    (39) statement -> . compound_stmt
+    (40) statement -> . if_stmt
+    (41) statement -> . for_stmt
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+    (45) assignment_stmt -> . ID ASSIGN expression
+    (33) compound_stmt -> . BEGIN statement_list END
+    (42) if_stmt -> . IF LPAREN expression RPAREN THEN statement
+    (43) if_stmt -> . IF LPAREN expression RPAREN THEN statement ELSE statement
+    (44) for_stmt -> . FOR ID ASSIGN expression TO expression DO statement
+
+    ID              shift and go to state 36
+    BEGIN           shift and go to state 14
+    IF              shift and go to state 37
+    FOR             shift and go to state 38
+
+    statement                      shift and go to state 144
+    call_stmt                      shift and go to state 31
+    assignment_stmt                shift and go to state 32
+    compound_stmt                  shift and go to state 33
+    if_stmt                        shift and go to state 34
+    for_stmt                       shift and go to state 35
+
+state 133
+
+    (44) for_stmt -> FOR ID ASSIGN expression TO . expression DO statement
+    (54) expression -> . term
+    (55) expression -> . expression PLUS term
+    (56) expression -> . expression MINUS term
+    (57) expression -> . expression GREATER term
+    (58) expression -> . expression LESS term
+    (59) expression -> . expression GREATEREQUAL term
+    (60) expression -> . expression LESSEQUAL term
+    (61) expression -> . expression NOTEQUAL term
+    (62) term -> . factor
+    (63) term -> . term TIMES factor
+    (64) term -> . term DIVIDE factor
+    (65) factor -> . NUMBER
+    (66) factor -> . STRING
+    (67) factor -> . call_stmt
+    (68) factor -> . LPAREN expression RPAREN
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+
+    NUMBER          shift and go to state 70
+    STRING          shift and go to state 71
+    LPAREN          shift and go to state 65
+    ID              shift and go to state 64
+
+    expression                     shift and go to state 145
+    term                           shift and go to state 68
+    factor                         shift and go to state 69
+    call_stmt                      shift and go to state 72
+
+state 134
+
+    (14) const_list -> const_list ID EQUALS expression SEMICOLON .
+
+    ID              reduce using rule 14 (const_list -> const_list ID EQUALS expression SEMICOLON .)
+    BEGIN           reduce using rule 14 (const_list -> const_list ID EQUALS expression SEMICOLON .)
+    CONST           reduce using rule 14 (const_list -> const_list ID EQUALS expression SEMICOLON .)
+    TYPE            reduce using rule 14 (const_list -> const_list ID EQUALS expression SEMICOLON .)
+    VAR             reduce using rule 14 (const_list -> const_list ID EQUALS expression SEMICOLON .)
+    PROCEDURE       reduce using rule 14 (const_list -> const_list ID EQUALS expression SEMICOLON .)
+    FUNCTION        reduce using rule 14 (const_list -> const_list ID EQUALS expression SEMICOLON .)
+
+
+state 135
+
+    (17) type_list -> type_list ID EQUALS type_specifier SEMICOLON .
+
+    ID              reduce using rule 17 (type_list -> type_list ID EQUALS type_specifier SEMICOLON .)
+    BEGIN           reduce using rule 17 (type_list -> type_list ID EQUALS type_specifier SEMICOLON .)
+    CONST           reduce using rule 17 (type_list -> type_list ID EQUALS type_specifier SEMICOLON .)
+    TYPE            reduce using rule 17 (type_list -> type_list ID EQUALS type_specifier SEMICOLON .)
+    VAR             reduce using rule 17 (type_list -> type_list ID EQUALS type_specifier SEMICOLON .)
+    PROCEDURE       reduce using rule 17 (type_list -> type_list ID EQUALS type_specifier SEMICOLON .)
+    FUNCTION        reduce using rule 17 (type_list -> type_list ID EQUALS type_specifier SEMICOLON .)
+
+
+state 136
+
+    (24) type_specifier -> ARRAY LBRACKET range . RBRACKET OF type_base
+
+    RBRACKET        shift and go to state 146
+
+
+state 137
+
+    (30) range -> NUMBER . DOT DOT NUMBER
+
+    DOT             shift and go to state 147
+
+
+state 138
+
+    (25) type_specifier -> STRING LBRACKET NUMBER . RBRACKET
+
+    RBRACKET        shift and go to state 148
+
+
+state 139
+
+    (20) var_list -> var_list id_list COLON type_specifier SEMICOLON .
+
+    ID              reduce using rule 20 (var_list -> var_list id_list COLON type_specifier SEMICOLON .)
+    BEGIN           reduce using rule 20 (var_list -> var_list id_list COLON type_specifier SEMICOLON .)
+    CONST           reduce using rule 20 (var_list -> var_list id_list COLON type_specifier SEMICOLON .)
+    TYPE            reduce using rule 20 (var_list -> var_list id_list COLON type_specifier SEMICOLON .)
+    VAR             reduce using rule 20 (var_list -> var_list id_list COLON type_specifier SEMICOLON .)
+    PROCEDURE       reduce using rule 20 (var_list -> var_list id_list COLON type_specifier SEMICOLON .)
+    FUNCTION        reduce using rule 20 (var_list -> var_list id_list COLON type_specifier SEMICOLON .)
+
+
+state 140
+
+    (50) arg_list -> ID COLON type_specifier .
+
+    SEMICOLON       reduce using rule 50 (arg_list -> ID COLON type_specifier .)
+    RPAREN          reduce using rule 50 (arg_list -> ID COLON type_specifier .)
+
+
+state 141
+
+    (31) procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON . compound_stmt SEMICOLON
+    (33) compound_stmt -> . BEGIN statement_list END
+
+    BEGIN           shift and go to state 14
+
+    compound_stmt                  shift and go to state 149
+
+state 142
+
+    (51) arg_list -> arg_list SEMICOLON ID . COLON type_specifier
+
+    COLON           shift and go to state 150
+
+
+state 143
+
+    (32) function_declaration -> FUNCTION ID LPAREN args RPAREN COLON . type_specifier SEMICOLON compound_stmt SEMICOLON
+    (22) type_specifier -> . ID
+    (23) type_specifier -> . type_base
+    (24) type_specifier -> . ARRAY LBRACKET range RBRACKET OF type_base
+    (25) type_specifier -> . STRING LBRACKET NUMBER RBRACKET
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    ID              shift and go to state 79
+    ARRAY           shift and go to state 82
+    STRING          shift and go to state 83
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_specifier                 shift and go to state 151
+    type_base                      shift and go to state 81
+
+state 144
+
+    (42) if_stmt -> IF LPAREN expression RPAREN THEN statement .
+    (43) if_stmt -> IF LPAREN expression RPAREN THEN statement . ELSE statement
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    END             reduce using rule 42 (if_stmt -> IF LPAREN expression RPAREN THEN statement .)
+    ID              reduce using rule 42 (if_stmt -> IF LPAREN expression RPAREN THEN statement .)
+    BEGIN           reduce using rule 42 (if_stmt -> IF LPAREN expression RPAREN THEN statement .)
+    IF              reduce using rule 42 (if_stmt -> IF LPAREN expression RPAREN THEN statement .)
+    FOR             reduce using rule 42 (if_stmt -> IF LPAREN expression RPAREN THEN statement .)
+    ELSE            shift and go to state 152
+
+  ! ELSE            [ reduce using rule 42 (if_stmt -> IF LPAREN expression RPAREN THEN statement .) ]
+
+
+state 145
+
+    (44) for_stmt -> FOR ID ASSIGN expression TO expression . DO statement
+    (55) expression -> expression . PLUS term
+    (56) expression -> expression . MINUS term
+    (57) expression -> expression . GREATER term
+    (58) expression -> expression . LESS term
+    (59) expression -> expression . GREATEREQUAL term
+    (60) expression -> expression . LESSEQUAL term
+    (61) expression -> expression . NOTEQUAL term
+
+    DO              shift and go to state 153
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    GREATER         shift and go to state 100
+    LESS            shift and go to state 101
+    GREATEREQUAL    shift and go to state 102
+    LESSEQUAL       shift and go to state 103
+    NOTEQUAL        shift and go to state 104
+
+
+state 146
+
+    (24) type_specifier -> ARRAY LBRACKET range RBRACKET . OF type_base
+
+    OF              shift and go to state 154
+
+
+state 147
+
+    (30) range -> NUMBER DOT . DOT NUMBER
+
+    DOT             shift and go to state 155
+
+
+state 148
+
+    (25) type_specifier -> STRING LBRACKET NUMBER RBRACKET .
+
+    SEMICOLON       reduce using rule 25 (type_specifier -> STRING LBRACKET NUMBER RBRACKET .)
+    RPAREN          reduce using rule 25 (type_specifier -> STRING LBRACKET NUMBER RBRACKET .)
+
+
+state 149
+
+    (31) procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt . SEMICOLON
+
+    SEMICOLON       shift and go to state 156
+
+
+state 150
+
+    (51) arg_list -> arg_list SEMICOLON ID COLON . type_specifier
+    (22) type_specifier -> . ID
+    (23) type_specifier -> . type_base
+    (24) type_specifier -> . ARRAY LBRACKET range RBRACKET OF type_base
+    (25) type_specifier -> . STRING LBRACKET NUMBER RBRACKET
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    ID              shift and go to state 79
+    ARRAY           shift and go to state 82
+    STRING          shift and go to state 83
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_specifier                 shift and go to state 157
+    type_base                      shift and go to state 81
+
+state 151
+
+    (32) function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier . SEMICOLON compound_stmt SEMICOLON
+
+    SEMICOLON       shift and go to state 158
+
+
+state 152
+
+    (43) if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE . statement
+    (37) statement -> . call_stmt SEMICOLON
+    (38) statement -> . assignment_stmt SEMICOLON
+    (39) statement -> . compound_stmt
+    (40) statement -> . if_stmt
+    (41) statement -> . for_stmt
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+    (45) assignment_stmt -> . ID ASSIGN expression
+    (33) compound_stmt -> . BEGIN statement_list END
+    (42) if_stmt -> . IF LPAREN expression RPAREN THEN statement
+    (43) if_stmt -> . IF LPAREN expression RPAREN THEN statement ELSE statement
+    (44) for_stmt -> . FOR ID ASSIGN expression TO expression DO statement
+
+    ID              shift and go to state 36
+    BEGIN           shift and go to state 14
+    IF              shift and go to state 37
+    FOR             shift and go to state 38
+
+    statement                      shift and go to state 159
+    call_stmt                      shift and go to state 31
+    assignment_stmt                shift and go to state 32
+    compound_stmt                  shift and go to state 33
+    if_stmt                        shift and go to state 34
+    for_stmt                       shift and go to state 35
+
+state 153
+
+    (44) for_stmt -> FOR ID ASSIGN expression TO expression DO . statement
+    (37) statement -> . call_stmt SEMICOLON
+    (38) statement -> . assignment_stmt SEMICOLON
+    (39) statement -> . compound_stmt
+    (40) statement -> . if_stmt
+    (41) statement -> . for_stmt
+    (46) call_stmt -> . ID LPAREN expression_list RPAREN
+    (47) call_stmt -> . ID
+    (45) assignment_stmt -> . ID ASSIGN expression
+    (33) compound_stmt -> . BEGIN statement_list END
+    (42) if_stmt -> . IF LPAREN expression RPAREN THEN statement
+    (43) if_stmt -> . IF LPAREN expression RPAREN THEN statement ELSE statement
+    (44) for_stmt -> . FOR ID ASSIGN expression TO expression DO statement
+
+    ID              shift and go to state 36
+    BEGIN           shift and go to state 14
+    IF              shift and go to state 37
+    FOR             shift and go to state 38
+
+    statement                      shift and go to state 160
+    call_stmt                      shift and go to state 31
+    assignment_stmt                shift and go to state 32
+    compound_stmt                  shift and go to state 33
+    if_stmt                        shift and go to state 34
+    for_stmt                       shift and go to state 35
+
+state 154
+
+    (24) type_specifier -> ARRAY LBRACKET range RBRACKET OF . type_base
+    (26) type_base -> . INTEGER
+    (27) type_base -> . REAL
+    (28) type_base -> . CHAR
+    (29) type_base -> . BOOLEAN
+
+    INTEGER         shift and go to state 84
+    REAL            shift and go to state 85
+    CHAR            shift and go to state 86
+    BOOLEAN         shift and go to state 87
+
+    type_base                      shift and go to state 161
+
+state 155
+
+    (30) range -> NUMBER DOT DOT . NUMBER
+
+    NUMBER          shift and go to state 162
+
+
+state 156
+
+    (31) procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON .
+
+    BEGIN           reduce using rule 31 (procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON .)
+    CONST           reduce using rule 31 (procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON .)
+    TYPE            reduce using rule 31 (procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON .)
+    VAR             reduce using rule 31 (procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON .)
+    PROCEDURE       reduce using rule 31 (procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON .)
+    FUNCTION        reduce using rule 31 (procedure_declaration -> PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON .)
+
+
+state 157
+
+    (51) arg_list -> arg_list SEMICOLON ID COLON type_specifier .
+
+    SEMICOLON       reduce using rule 51 (arg_list -> arg_list SEMICOLON ID COLON type_specifier .)
+    RPAREN          reduce using rule 51 (arg_list -> arg_list SEMICOLON ID COLON type_specifier .)
+
+
+state 158
+
+    (32) function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON . compound_stmt SEMICOLON
+    (33) compound_stmt -> . BEGIN statement_list END
+
+    BEGIN           shift and go to state 14
+
+    compound_stmt                  shift and go to state 163
+
+state 159
+
+    (43) if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement .
+
+    END             reduce using rule 43 (if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement .)
+    ID              reduce using rule 43 (if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement .)
+    BEGIN           reduce using rule 43 (if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement .)
+    IF              reduce using rule 43 (if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement .)
+    FOR             reduce using rule 43 (if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement .)
+    ELSE            reduce using rule 43 (if_stmt -> IF LPAREN expression RPAREN THEN statement ELSE statement .)
+
+
+state 160
+
+    (44) for_stmt -> FOR ID ASSIGN expression TO expression DO statement .
+
+    END             reduce using rule 44 (for_stmt -> FOR ID ASSIGN expression TO expression DO statement .)
+    ID              reduce using rule 44 (for_stmt -> FOR ID ASSIGN expression TO expression DO statement .)
+    BEGIN           reduce using rule 44 (for_stmt -> FOR ID ASSIGN expression TO expression DO statement .)
+    IF              reduce using rule 44 (for_stmt -> FOR ID ASSIGN expression TO expression DO statement .)
+    FOR             reduce using rule 44 (for_stmt -> FOR ID ASSIGN expression TO expression DO statement .)
+    ELSE            reduce using rule 44 (for_stmt -> FOR ID ASSIGN expression TO expression DO statement .)
+
+
+state 161
+
+    (24) type_specifier -> ARRAY LBRACKET range RBRACKET OF type_base .
+
+    SEMICOLON       reduce using rule 24 (type_specifier -> ARRAY LBRACKET range RBRACKET OF type_base .)
+    RPAREN          reduce using rule 24 (type_specifier -> ARRAY LBRACKET range RBRACKET OF type_base .)
+
+
+state 162
+
+    (30) range -> NUMBER DOT DOT NUMBER .
+
+    RBRACKET        reduce using rule 30 (range -> NUMBER DOT DOT NUMBER .)
+
+
+state 163
+
+    (32) function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt . SEMICOLON
+
+    SEMICOLON       shift and go to state 164
+
+
+state 164
+
+    (32) function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON .
+
+    BEGIN           reduce using rule 32 (function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON .)
+    CONST           reduce using rule 32 (function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON .)
+    TYPE            reduce using rule 32 (function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON .)
+    VAR             reduce using rule 32 (function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON .)
+    PROCEDURE       reduce using rule 32 (function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON .)
+    FUNCTION        reduce using rule 32 (function_declaration -> FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for ID in state 14 resolved as shift
+WARNING: shift/reduce conflict for BEGIN in state 14 resolved as shift
+WARNING: shift/reduce conflict for IF in state 14 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 14 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 144 resolved as shift

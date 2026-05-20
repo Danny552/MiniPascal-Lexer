@@ -18,15 +18,14 @@ def enter_scope():
 def declare_symbol(name, symbol_type, value=None):
     current_scope = scopes[-1]
     if name in current_scope:
-        print(f"Error semantico: '{name}' Ya esta declarado en el scope.")
-        error_stats['semantico'] += 1 # Incremento
+        print(f"Error semantico: '{name}' ya declarado.")
+        error_stats['semantico'] += 1
     else:
         current_scope[name] = {
             'nombre': name,
             'tipo': symbol_type,
-            'atributo': value
+            'atributo': [value] if value is not None else [] 
         }
-        print(f"DEBUG: Se declara '{name}' como {symbol_type}")
 
 def lookup_symbol(name):
     for scope in reversed(scopes):
@@ -43,10 +42,10 @@ def get_symbol_info(name):
 def update_symbol_value(name, value):
     for scope in reversed(scopes):
         if name in scope:
-            if isinstance(scope[name], dict):
-                scope[name]['atributo'] = value
+            if isinstance(scope[name]['atributo'], list):
+                if not scope[name]['atributo'] or scope[name]['atributo'][-1] != value:
+                    scope[name]['atributo'].append(value)
             break
-
 def evaluate_expression(expr):
     if isinstance(expr, (int, float)):
         return expr
@@ -76,17 +75,12 @@ def evaluate_expression(expr):
     return None
 
 def print_symbol_table():
-    print("\n" + "="*60)
-    print("TABLA DE SÍMBOLOS")
-    print("="*60)
-    print(f"{'NOMBRE':<20} {'TIPO':<15} {'ATRIBUTO':<15}")
-    print("-"*60)
+    print(f"{'NOMBRE':<15} {'TIPO':<15} {'HISTORIAL DE VALORES':<30}")
     for scope in scopes:
         for name, info in scope.items():
-            if isinstance(info, dict):
-                attr = info['atributo'] if info['atributo'] is not None else '---'
-                print(f"{info['nombre']:<20} {info['tipo']:<15} {str(attr):<15}")
-    print("="*60)
+            attr = info['atributo']
+            attr_str = ", ".join(map(str, attr)) if isinstance(attr, list) else str(attr)
+            print(f"{info['nombre']:<15} {info['tipo']:<15} {attr_str:<30}")
 
 def print_error_report():
     print("RESUMEN DE ERRORES")
@@ -161,9 +155,27 @@ def p_var_list(p):
 
 def p_type_specifier(p):
     '''type_specifier : ID
-                      | STRING LBRACKET NUMBER RBRACKET
-                      | NUMBER DOT DOT NUMBER'''
+                      | type_base
+                      | ARRAY LBRACKET range RBRACKET OF type_base
+                      | STRING LBRACKET NUMBER RBRACKET'''
+    
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 7:
+        p[0] = f"array of {p[6]}"
+    else:
+        p[0] = "string"
+
+def p_type_base(p):
+    '''type_base : INTEGER
+                 | REAL
+                 | CHAR
+                 | BOOLEAN'''
     p[0] = p[1]
+
+def p_range(p):
+    '''range : NUMBER DOT DOT NUMBER'''
+    p[0] = (p[1], p[4])
 
 def p_procedure_declaration(p):
     'procedure_declaration : PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON'
@@ -199,15 +211,26 @@ def p_if_stmt(p):
 
 def p_for_stmt(p):
     'for_stmt : FOR ID ASSIGN expression TO expression DO statement'
-    if lookup_symbol(p[2]) is None:
-        print(f"Error semántico: Variable '{p[2]}' no declarada.")
-        error_stats['semantico'] += 1 # Incremento
+    
+    var_name = p[2]
+    inicio = evaluate_expression(p[4])
+    fin = evaluate_expression(p[6])
+    
+    if lookup_symbol(var_name) is None:
+        print(f"Error semántico: Variable de control '{var_name}' no declarada.")
+        error_stats['semantico'] += 1
+    else:
+        
+        if inicio is not None and fin is not None:
+            for i in range(inicio, fin + 1):
+                update_symbol_value(var_name, i)
+                print(f"DEBUG: Bucle FOR para '{var_name}', valor actual: {i}")
 
 def p_assignment_stmt(p):
     'assignment_stmt : ID ASSIGN expression'
     if lookup_symbol(p[1]) is None:
         print(f"Error semántico: Variable '{p[1]}' usada antes de su declaración.")
-        error_stats['semantico'] += 1 # Incremento
+        error_stats['semantico'] += 1 
     else:
         val = evaluate_expression(p[3])
         if val is not None:
@@ -221,7 +244,7 @@ def p_call_stmt(p):
     if lookup_symbol(name) is None:
         if name.lower() not in ['write', 'writeln', 'readln']:
             print(f"Error semántico: Función o procedimiento '{name}' no definido.")
-            error_stats['semantico'] += 1 # Incremento
+            error_stats['semantico'] += 1
     p[0] = name
     
 def p_args(p):
@@ -285,7 +308,7 @@ def p_empty(p):
     pass
 
 def p_error(p):
-    error_stats['sintactico'] += 1 # Incremento
+    error_stats['sintactico'] += 1
     if p:
         print(f"Error de sintaxis en la línea {p.lineno}: Token inesperado '{p.value}'")
     else:
@@ -294,7 +317,7 @@ def p_error(p):
 parser = yacc.yacc(start='program')
 
 if __name__ == '__main__':
-    fin = sys.argv[1] if len(sys.argv) > 1 else 'Pruebabuen.pas'
+    fin = sys.argv[1] if len(sys.argv) > 1 else 'Prueba.pas'
     with open(fin, 'r') as f:
         data = f.read()
     try:

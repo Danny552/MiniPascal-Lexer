@@ -1,5 +1,8 @@
 program fibonacci;
 
+var
+matrix: array[1..10] of Daniel;
+
 function fib(n: integer): integer;
 begin
     if (n <= 2) then
