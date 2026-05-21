@@ -158,8 +158,7 @@ def p_var_list(p):
         declare_symbol(name, data_type)
 
 def p_type_specifier(p):
-    '''type_specifier : ID
-                      | type_base
+    '''type_specifier : type_base
                       | ARRAY LBRACKET range RBRACKET OF type_base
                       | STRING LBRACKET NUMBER RBRACKET'''
     
@@ -187,7 +186,7 @@ def p_procedure_declaration(p):
 
 
 def p_function_declaration(p):
-    'function_declaration : FUNCTION ID LPAREN args RPAREN COLON type_specifier SEMICOLON compound_stmt SEMICOLON'
+    'function_declaration : FUNCTION ID LPAREN args RPAREN COLON type_base SEMICOLON compound_stmt SEMICOLON'
     declare_symbol(p[2], f"function returning {p[7]}")
 
 def p_compound_stmt(p):
@@ -257,8 +256,8 @@ def p_args(p):
     p[0] = p[1]
 
 def p_arg_list(p):
-    '''arg_list : ID COLON type_specifier
-                | arg_list SEMICOLON ID COLON type_specifier'''
+    '''arg_list : ID COLON type_base
+                | arg_list SEMICOLON ID COLON type_base'''
     if len(scopes) == 1: 
         enter_scope() 
         
