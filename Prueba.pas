@@ -1,7 +1,7 @@
 program fibonacci;
 
 var
-matrix: array[1..10] of Daniel;
+matrix: array[1..10] of integer;
 
 function fib(n: integer): integer;
 begin

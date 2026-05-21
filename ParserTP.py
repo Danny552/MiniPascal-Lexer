@@ -75,12 +75,16 @@ def evaluate_expression(expr):
     return None
 
 def print_symbol_table():
-    print(f"{'NOMBRE':<15} {'TIPO':<15} {'HISTORIAL DE VALORES':<30}")
+    print(f"{'NOMBRE':<15} {'TIPO':<30} {'HISTORIAL DE VALORES':<30}")
     for scope in scopes:
         for name, info in scope.items():
             attr = info['atributo']
             attr_str = ", ".join(map(str, attr)) if isinstance(attr, list) else str(attr)
-            print(f"{info['nombre']:<15} {info['tipo']:<15} {attr_str:<30}")
+            if isinstance(attr, list):
+                for val in attr_str.split(', '):
+                    print(f"{info['nombre']:<15} {info['tipo']:<30} {val:<30}")
+            else:
+                print(f"{info['nombre']:<15} {info['tipo']:<30} {attr_str:<30}")
 
 def print_error_report():
     print("RESUMEN DE ERRORES")
