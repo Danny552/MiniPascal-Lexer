@@ -8,7 +8,8 @@ error_stats = {
     'semantico': 0
 }
 
-scopes = [{}] 
+scopes = [{}]
+closed_scopes = []
 
 def enter_scope():
     scopes.append({})
@@ -24,7 +25,8 @@ def declare_symbol(name, symbol_type, value=None):
         current_scope[name] = {
             'nombre': name,
             'tipo': symbol_type,
-            'atributo': [value] if value is not None else [] 
+            'atributo': [value] if value is not None else [],
+            'scope_type': 'global' if len(scopes) == 1 else 'local'
         }
 
 def lookup_symbol(name):
@@ -38,6 +40,16 @@ def get_symbol_info(name):
         if name in scope:
             return scope[name]
     return None
+
+def get_symbol_scope(name):
+    sym = get_symbol_info(name)
+    return sym['scope_type'] if sym else None
+
+
+def exit_scope():
+    if len(scopes) > 1:
+        closed_scopes.append(scopes.pop())
+        print("DEBUG: Se sale de un scope")
 
 def update_symbol_value(name, value):
     for scope in reversed(scopes):
@@ -75,16 +87,17 @@ def evaluate_expression(expr):
     return None
 
 def print_symbol_table():
-    print(f"{'NOMBRE':<15} {'TIPO':<30} {'HISTORIAL DE VALORES':<30}")
-    for scope in scopes:
+    print(f"{'NOMBRE':<15} {'TIPO':<30} {'SCOPE':<10} {'HISTORIAL DE VALORES':<30}")
+    for scope in closed_scopes + scopes:
         for name, info in scope.items():
             attr = info['atributo']
+            scope_type = info.get('scope_type', 'global')
             attr_str = ", ".join(map(str, attr)) if isinstance(attr, list) else str(attr)
             if isinstance(attr, list):
                 for val in attr_str.split(', '):
-                    print(f"{info['nombre']:<15} {info['tipo']:<30} {val:<30}")
+                    print(f"{info['nombre']:<15} {info['tipo']:<30} {scope_type:<10} {val:<30}")
             else:
-                print(f"{info['nombre']:<15} {info['tipo']:<30} {attr_str:<30}")
+                print(f"{info['nombre']:<15} {info['tipo']:<30} {scope_type:<10} {attr_str:<30}")
 
 def print_error_report():
     print("RESUMEN DE ERRORES")
@@ -182,11 +195,15 @@ def p_range(p):
 
 def p_procedure_declaration(p):
     'procedure_declaration : PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON'
+    if len(scopes) > 1:
+        exit_scope()
     declare_symbol(p[2], 'procedure')
 
 
 def p_function_declaration(p):
     'function_declaration : FUNCTION ID LPAREN args RPAREN COLON type_base SEMICOLON compound_stmt SEMICOLON'
+    if len(scopes) > 1:
+        exit_scope()
     declare_symbol(p[2], f"function returning {p[7]}")
 
 def p_compound_stmt(p):
@@ -223,11 +240,11 @@ def p_for_stmt(p):
         print(f"Error semántico: Variable de control '{var_name}' no declarada.")
         error_stats['semantico'] += 1
     else:
-        
         if inicio is not None and fin is not None:
+            scope_type = get_symbol_scope(var_name)
             for i in range(inicio, fin + 1):
                 update_symbol_value(var_name, i)
-                print(f"DEBUG: Bucle FOR para '{var_name}', valor actual: {i}")
+                print(f"DEBUG: Bucle FOR para '{var_name}' ({scope_type}), valor actual: {i}")
 
 def p_assignment_stmt(p):
     'assignment_stmt : ID ASSIGN expression'
@@ -238,7 +255,8 @@ def p_assignment_stmt(p):
         val = evaluate_expression(p[3])
         if val is not None:
             update_symbol_value(p[1], val)
-            print(f"DEBUG: Asignado {val} a {p[1]}")
+            scope_type = get_symbol_scope(p[1])
+            print(f"DEBUG: Asignado {val} a {p[1]} ({scope_type})")
 
 def p_call_stmt(p):
     '''call_stmt : ID LPAREN expression_list RPAREN
@@ -253,6 +271,8 @@ def p_call_stmt(p):
 def p_args(p):
     '''args : arg_list
             | empty'''
+    if len(scopes) == 1:
+        enter_scope()
     p[0] = p[1]
 
 def p_arg_list(p):

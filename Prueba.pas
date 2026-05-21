@@ -3,7 +3,7 @@ program fibonacci;
 var
 matrix: array[1..10] of integer;
 
-function fib(n: integer): integer;
+function fib(n: integer; l: integer): integer;
 begin
     if (n <= 2) then
         fib := 1;
