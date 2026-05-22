@@ -20,5 +20,5 @@ begin
   for i := 1 to 10 do
     i := i + 1;         { Error: Modification of loop control variable }
 
-  CheckVar(10.5);       { Error: Cannot pass constant literal to 'var' parameter }
+  CheckVar(10.5);
 end.
