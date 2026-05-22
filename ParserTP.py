@@ -82,17 +82,50 @@ def infer_value_type(value):
     return None
 
 
-def is_assignment_compatible(target_type, value):
+def infer_expression_type(expr):
+    if isinstance(expr, bool):
+        return 'boolean'
+    if isinstance(expr, int):
+        return 'integer'
+    if isinstance(expr, float):
+        return 'real'
+    if isinstance(expr, str):
+        sym = lookup_symbol(expr)
+        if sym:
+            return normalize_type_name(sym.get('tipo'))
+        return 'string'
+    if isinstance(expr, tuple) and len(expr) == 3:
+        left, op, right = expr
+        left_type = infer_expression_type(left)
+        right_type = infer_expression_type(right)
+        if op in ('+', '-', '*', '/'):
+            if left_type == 'real' or right_type == 'real':
+                return 'real'
+            if left_type == 'integer' and right_type == 'integer':
+                return 'integer'
+            return None
+        if op in ('>', '<', '>=', '<=', '<>', '='):
+            return 'boolean'
+        return None
+    return None
+
+
+def is_assignment_compatible(target_type, value_or_type):
     target = normalize_type_name(target_type)
-    value_type = infer_value_type(value)
+    source_type = None
 
-    if target is None or value_type is None:
+    if isinstance(value_or_type, str) and value_or_type in ['integer', 'real', 'char', 'boolean', 'string']:
+        source_type = normalize_type_name(value_or_type)
+    else:
+        source_type = infer_value_type(value_or_type)
+
+    if target is None or source_type is None:
         return True
 
-    if target == value_type:
+    if target == source_type:
         return True
 
-    if target == 'real' and value_type == 'integer':
+    if target == 'real' and source_type == 'integer':
         return True
 
     return False
@@ -309,17 +342,22 @@ def p_range(p):
     p[0] = (p[1], p[4])
 
 def p_procedure_declaration(p):
-    'procedure_declaration : PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON'
+    'procedure_declaration : PROCEDURE ID LPAREN enter_args args RPAREN SEMICOLON compound_stmt SEMICOLON'
     if len(scopes) > 1:
         exit_scope()
-    declare_symbol(p[2], 'procedure', params=p[4], kind='procedure')
+    declare_symbol(p[2], 'procedure', params=p[5], kind='procedure')
 
 
 def p_function_declaration(p):
-    'function_declaration : FUNCTION ID LPAREN args RPAREN COLON type_base SEMICOLON compound_stmt SEMICOLON'
+    'function_declaration : FUNCTION ID LPAREN enter_args args RPAREN COLON type_base SEMICOLON compound_stmt SEMICOLON'
     if len(scopes) > 1:
         exit_scope()
-    declare_symbol(p[2], f"function returning {p[7]}", params=p[4], kind='function')
+    declare_symbol(p[2], f"function returning {p[8]}", params=p[6], kind='function')
+
+
+def p_enter_args(p):
+    'enter_args :'
+    enter_scope()
 
 def p_compound_stmt(p):
     'compound_stmt : BEGIN statement_list END'
@@ -384,11 +422,20 @@ def p_assignment_stmt(p):
             return
 
         val = evaluate_expression(p[3])
-        if val is not None:
+        expr_type = infer_expression_type(p[3])
+
+        if expr_type is not None:
+            if not is_assignment_compatible(get_symbol_info(p[1]).get('tipo'), expr_type):
+                print(f"Error semántico: Incompatibilidad de tipos en la asignación a '{p[1]}'.")
+                error_stats['semantico'] += 1
+                return
+        elif val is not None:
             if not is_assignment_compatible(get_symbol_info(p[1]).get('tipo'), val):
                 print(f"Error semántico: Incompatibilidad de tipos en la asignación a '{p[1]}'.")
                 error_stats['semantico'] += 1
                 return
+
+        if val is not None:
             update_symbol_value(p[1], val)
             scope_type = get_symbol_scope(p[1])
             print(f"DEBUG: Asignado {val} a {p[1]} ({scope_type})")
@@ -413,15 +460,11 @@ def p_call_stmt(p):
 def p_args(p):
     '''args : arg_list
             | empty'''
-    if len(scopes) == 1:
-        enter_scope()
-    p[0] = p[1]
+    p[0] = p[1] if p[1] is not None else []
 
 def p_arg_list(p):
     '''arg_list : arg_spec
                 | arg_list SEMICOLON arg_spec'''
-    if len(scopes) == 1: 
-        enter_scope() 
     if len(p) == 2:
         p[0] = [p[1]]
     else:
