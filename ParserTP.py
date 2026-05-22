@@ -1,3 +1,5 @@
+from tkinter import END
+
 import ply.yacc as yacc
 from MainLex import tokens
 import sys
@@ -360,7 +362,8 @@ def p_enter_args(p):
     enter_scope()
 
 def p_compound_stmt(p):
-    'compound_stmt : BEGIN statement_list END'
+    '''compound_stmt : BEGIN statement_list END
+                     | var_section BEGIN statement_list END'''         
     pass
 
 def p_statement_list(p):

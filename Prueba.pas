@@ -9,8 +9,11 @@ var
   arr: array[1..3] of Real;
 
 procedure CheckVar(x: Real);
+var
+  i: integer;
 begin
   x := x + 1.0;
+  i := 10;
 end;
 
 begin
