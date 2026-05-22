@@ -1,21 +1,24 @@
-program fibonacci;
+program SemanticTest;
+const
+  MAX = 100;
 
 var
-matrix: array[1..10] of integer;
+ MAX: Integer;        { Error: Redeclaration of constant as variable }
+  i: Integer;
+  r: Real;
+  arr: array[1..3] of Real;
 
-function fib(n: integer; l: integer): integer;
+procedure CheckVar(x: Real);
 begin
-    if (n <= 2) then
-        fib := 1;
-    else
-        fib := fib(n - 1) + fib(n - 2);
+  x := x + 1.0;
 end;
 
-var
-    i: integer;
-
 begin
-    for i := 1 to 16 do
-        write(fib(i), ', ');
-    writeln('...');
-end.   
+  MAX := 200;           { Error: Assignment to constant }
+  i := 5.5;             { Error: Type mismatch (Real to Integer) }
+  
+  for i := 1 to 10 do
+    i := i + 1;         { Error: Modification of loop control variable }
+
+  CheckVar(10.5);       { Error: Cannot pass constant literal to 'var' parameter }
+end.

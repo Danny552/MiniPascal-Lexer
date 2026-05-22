@@ -10,13 +10,14 @@ error_stats = {
 
 scopes = [{}]
 closed_scopes = []
+loop_control_vars = []
 
 def enter_scope():
     scopes.append({})
     print("DEBUG: Se entra a un nuevo scope")
 
 
-def declare_symbol(name, symbol_type, value=None):
+def declare_symbol(name, symbol_type, value=None, params=None, kind='var'):
     current_scope = scopes[-1]
     if name in current_scope:
         print(f"Error semantico: '{name}' ya declarado.")
@@ -26,7 +27,9 @@ def declare_symbol(name, symbol_type, value=None):
             'nombre': name,
             'tipo': symbol_type,
             'atributo': [value] if value is not None else [],
-            'scope_type': 'global' if len(scopes) == 1 else 'local'
+            'scope_type': 'global' if len(scopes) == 1 else 'local',
+            'kind': kind,
+            'params': params or []
         }
 
 def lookup_symbol(name):
@@ -46,6 +49,83 @@ def get_symbol_scope(name):
     return sym['scope_type'] if sym else None
 
 
+def get_symbol_kind(name):
+    sym = get_symbol_info(name)
+    return sym.get('kind') if sym else None
+
+
+def get_symbol_value(name):
+    sym = get_symbol_info(name)
+    if not sym:
+        return None
+    attrs = sym.get('atributo', [])
+    if isinstance(attrs, list):
+        return attrs[-1] if attrs else None
+    return attrs
+
+
+def normalize_type_name(type_name):
+    if type_name is None:
+        return None
+    return str(type_name).strip().lower()
+
+
+def infer_value_type(value):
+    if isinstance(value, bool):
+        return 'boolean'
+    if isinstance(value, int) and not isinstance(value, bool):
+        return 'integer'
+    if isinstance(value, float):
+        return 'real'
+    if isinstance(value, str):
+        return 'string'
+    return None
+
+
+def is_assignment_compatible(target_type, value):
+    target = normalize_type_name(target_type)
+    value_type = infer_value_type(value)
+
+    if target is None or value_type is None:
+        return True
+
+    if target == value_type:
+        return True
+
+    if target == 'real' and value_type == 'integer':
+        return True
+
+    return False
+
+
+
+def is_variable_reference(actual):
+    if not isinstance(actual, str):
+        return False
+    sym = lookup_symbol(actual)
+    return sym is not None and sym.get('kind') == 'var'
+
+
+def validate_call_arguments(name, actuals):
+    sym = lookup_symbol(name)
+    if sym is None:
+        return
+
+    params = sym.get('params', [])
+    if not params:
+        return
+
+    if len(actuals) != len(params):
+        print(f"Error semántico: '{name}' espera {len(params)} argumentos y recibió {len(actuals)}.")
+        error_stats['semantico'] += 1
+        return
+
+    for param, actual in zip(params, actuals):
+        if param.get('byref') and not is_variable_reference(actual):
+            print(f"Error semántico: El parámetro var '{param['name']}' requiere una variable, no una constante o expresión.")
+            error_stats['semantico'] += 1
+
+
 def exit_scope():
     if len(scopes) > 1:
         closed_scopes.append(scopes.pop())
@@ -58,6 +138,19 @@ def update_symbol_value(name, value):
                 if not scope[name]['atributo'] or scope[name]['atributo'][-1] != value:
                     scope[name]['atributo'].append(value)
             break
+
+
+def push_loop_control_var(name):
+    loop_control_vars.append(name)
+
+
+def pop_loop_control_var():
+    if loop_control_vars:
+        loop_control_vars.pop()
+
+
+def is_loop_control_var(name):
+    return name in loop_control_vars
 def evaluate_expression(expr):
     if isinstance(expr, (int, float)):
         return expr
@@ -65,7 +158,7 @@ def evaluate_expression(expr):
     if isinstance(expr, str):
         sym = get_symbol_info(expr)
         if sym and sym.get('atributo') is not None:
-            return sym['atributo']
+            return get_symbol_value(expr)
         try:
             return float(expr)
         except Exception:
@@ -145,7 +238,20 @@ def p_const_section(p):
 def p_const_list(p):
     '''const_list : const_list ID EQUALS expression SEMICOLON
                   | ID EQUALS expression SEMICOLON'''
-    pass
+    if len(p) == 6:
+        name = p[2]
+        expr = p[4]
+    else:
+        name = p[1]
+        expr = p[3]
+
+    value = evaluate_expression(expr)
+    if value is None:
+        value = expr
+
+    declare_symbol(name, infer_value_type(value) or 'const', value=value)
+    if name in scopes[-1]:
+        scopes[-1][name]['kind'] = 'const'
 
 def p_type_section(p):
     'type_section : TYPE type_list'
@@ -154,7 +260,16 @@ def p_type_section(p):
 def p_type_list(p):
     '''type_list : type_list ID EQUALS type_specifier SEMICOLON
                  | ID EQUALS type_specifier SEMICOLON'''
-    pass
+    if len(p) == 6:
+        name = p[2]
+        specifier = p[4]
+    else:
+        name = p[1]
+        specifier = p[3]
+
+    declare_symbol(name, specifier)
+    if name in scopes[-1]:
+        scopes[-1][name]['kind'] = 'type'
 
 def p_var_section(p):
     'var_section : VAR var_list'
@@ -197,14 +312,14 @@ def p_procedure_declaration(p):
     'procedure_declaration : PROCEDURE ID LPAREN args RPAREN SEMICOLON compound_stmt SEMICOLON'
     if len(scopes) > 1:
         exit_scope()
-    declare_symbol(p[2], 'procedure')
+    declare_symbol(p[2], 'procedure', params=p[4], kind='procedure')
 
 
 def p_function_declaration(p):
     'function_declaration : FUNCTION ID LPAREN args RPAREN COLON type_base SEMICOLON compound_stmt SEMICOLON'
     if len(scopes) > 1:
         exit_scope()
-    declare_symbol(p[2], f"function returning {p[7]}")
+    declare_symbol(p[2], f"function returning {p[7]}", params=p[4], kind='function')
 
 def p_compound_stmt(p):
     'compound_stmt : BEGIN statement_list END'
@@ -230,7 +345,7 @@ def p_if_stmt(p):
     pass
 
 def p_for_stmt(p):
-    'for_stmt : FOR ID ASSIGN expression TO expression DO statement'
+    'for_stmt : FOR ID ASSIGN expression TO expression DO loop_guard statement'
     
     var_name = p[2]
     inicio = evaluate_expression(p[4])
@@ -245,6 +360,12 @@ def p_for_stmt(p):
             for i in range(inicio, fin + 1):
                 update_symbol_value(var_name, i)
                 print(f"DEBUG: Bucle FOR para '{var_name}' ({scope_type}), valor actual: {i}")
+    pop_loop_control_var()
+
+
+def p_loop_guard(p):
+    'loop_guard :'
+    push_loop_control_var(p[-6])
 
 def p_assignment_stmt(p):
     'assignment_stmt : ID ASSIGN expression'
@@ -252,8 +373,22 @@ def p_assignment_stmt(p):
         print(f"Error semántico: Variable '{p[1]}' usada antes de su declaración.")
         error_stats['semantico'] += 1 
     else:
+        if get_symbol_kind(p[1]) in ('const', 'type'):
+            print(f"Error semántico: '{p[1]}' no es asignable.")
+            error_stats['semantico'] += 1
+            return
+
+        if is_loop_control_var(p[1]):
+            print(f"Error semántico: No se puede modificar la variable de control '{p[1]}' dentro del bucle FOR.")
+            error_stats['semantico'] += 1
+            return
+
         val = evaluate_expression(p[3])
         if val is not None:
+            if not is_assignment_compatible(get_symbol_info(p[1]).get('tipo'), val):
+                print(f"Error semántico: Incompatibilidad de tipos en la asignación a '{p[1]}'.")
+                error_stats['semantico'] += 1
+                return
             update_symbol_value(p[1], val)
             scope_type = get_symbol_scope(p[1])
             print(f"DEBUG: Asignado {val} a {p[1]} ({scope_type})")
@@ -266,6 +401,13 @@ def p_call_stmt(p):
         if name.lower() not in ['write', 'writeln', 'readln']:
             print(f"Error semántico: Función o procedimiento '{name}' no definido.")
             error_stats['semantico'] += 1
+    elif len(p) == 5:
+        validate_call_arguments(name, p[3])
+    else:
+        sym = lookup_symbol(name)
+        if sym and sym.get('params'):
+            print(f"Error semántico: '{name}' espera argumentos.")
+            error_stats['semantico'] += 1
     p[0] = name
     
 def p_args(p):
@@ -276,20 +418,34 @@ def p_args(p):
     p[0] = p[1]
 
 def p_arg_list(p):
-    '''arg_list : ID COLON type_base
-                | arg_list SEMICOLON ID COLON type_base'''
+    '''arg_list : arg_spec
+                | arg_list SEMICOLON arg_spec'''
     if len(scopes) == 1: 
         enter_scope() 
-        
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1] + [p[3]]
+
+
+def p_arg_spec(p):
+    '''arg_spec : ID COLON type_base
+                | VAR ID COLON type_base'''
     if len(p) == 4:
+        param = {'name': p[1], 'type': p[3], 'byref': False}
         declare_symbol(p[1], p[3])
     else:
-        declare_symbol(p[3], p[5])
+        param = {'name': p[2], 'type': p[4], 'byref': True}
+        declare_symbol(p[2], p[4])
+    p[0] = param
 
 def p_expression_list(p):
     '''expression_list : expression_list COMMA expression
                        | expression'''
-    pass
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1] + [p[3]]
 
 def p_expression(p):
     '''expression : term
@@ -320,7 +476,7 @@ def p_factor(p):
               | call_stmt
               | LPAREN expression RPAREN'''
     if len(p) == 2:
-            if isinstance(p[1], str) and p[1].replace('.','',1).isdigit():
+            if p.slice[1].type == 'NUMBER' and isinstance(p[1], str):
                 p[0] = float(p[1]) if '.' in p[1] else int(p[1])
             else:
                 p[0] = p[1]
